@@ -4,6 +4,7 @@ parameters:
     sidus_eav_model.form.type.sidus_bootstrap_collection.class: Sidus\EAVBootstrapBundle\Form\BootstrapCollectionType
     sidus_eav_model.form.type.sidus_date_picker.class: Sidus\EAVBootstrapBundle\Form\DatePickerType
     sidus_eav_model.form.type.sidus_datetime_picker.class: Sidus\EAVBootstrapBundle\Form\DateTimePickerType
+    sidus_eav_model.form.type.sidus_wysiwyg.class: Sidus\EAVBootstrapBundle\Form\WysiwygType
 
 services:
     sidus_eav_model.form.type.autocomplete_data_selector:
@@ -26,3 +27,8 @@ services:
         class: %sidus_eav_model.form.type.sidus_datetime_picker.class%
         tags:
             - { name: form.type, alias: sidus_datetime_picker }
+
+    sidus_eav_model.form.type.sidus_wysiwyg:
+        class: %sidus_eav_model.form.type.sidus_wysiwyg.class%
+        tags:
+            - { name: form.type, alias: sidus_wysiwyg }

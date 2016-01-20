@@ -1,4 +1,10 @@
 services:
+    sidus_eav_model.attribute_type.html:
+        class: %sidus_eav_model.attribute_type.default.class%
+        arguments: [html, textValue, sidus_wysiwyg]
+        tags:
+            - { name: sidus.attribute_type }
+
     sidus_eav_model.attribute_type.date:
         class: %sidus_eav_model.attribute_type.default.class%
         arguments: [date, dateValue, sidus_date_picker]

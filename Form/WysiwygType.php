@@ -3,11 +3,21 @@
 namespace Sidus\EAVBootstrapBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Exception\AccessException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DateTimePickerType extends AbstractType
+class WysiwygType extends AbstractType
 {
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+
+        if ($options['tinymce_theme']) {
+            $view->vars['attr']['data-theme'] = $options['tinymce_theme'];
+        }
+    }
+
     /**
      * @param OptionsResolver $resolver
      * @throws AccessException
@@ -15,18 +25,16 @@ class DateTimePickerType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'widget' => 'single_text',
-            'datetimepicker' => [
-                'attr' => [
-                    'class' => 'input-group date col-lg-4',
-                ],
+            'tinymce_theme' => null,
+            'attr' => [
+                'class' => 'tinymce',
             ],
         ]);
     }
 
     public function getParent()
     {
-        return 'datetime';
+        return 'textarea';
     }
 
     /**
@@ -34,6 +42,6 @@ class DateTimePickerType extends AbstractType
      */
     public function getName()
     {
-        return 'sidus_datetime_picker';
+        return 'sidus_wysiwyg';
     }
 }

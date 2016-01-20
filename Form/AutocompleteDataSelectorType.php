@@ -9,8 +9,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\Exception\AccessException;
+use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use UnexpectedValueException;
 
 class AutocompleteDataSelectorType extends AbstractType
 {
@@ -53,7 +56,7 @@ class AutocompleteDataSelectorType extends AbstractType
         $qb = $this->repository->createQueryBuilder('d');
         $qb->innerJoin('d.values', 'v')
             ->andWhere('d.familyCode = :familyCode')
-            ->andwhere('v.attributeCode = :attributeCode')
+            ->andWhere('v.attributeCode = :attributeCode')
             ->setParameter('attributeCode', $family->getAttributeAsLabel()->getCode())
             ->setParameter('familyCode', $family->getCode());
         $builder->setAttribute('query-builder', $qb);
@@ -62,6 +65,9 @@ class AutocompleteDataSelectorType extends AbstractType
 
     /**
      * @param OptionsResolver $resolver
+     * @throws AccessException
+     * @throws UndefinedOptionsException
+     * @throws UnexpectedValueException
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -78,7 +84,7 @@ class AutocompleteDataSelectorType extends AbstractType
         $resolver->setNormalizer('family_code', function (Options $options, $value) use ($familyConfigurationHandler) {
             $family = $familyConfigurationHandler->getFamily($value);
             if (!$family) {
-                throw new \UnexpectedValueException("Unknown family option {$family}");
+                throw new UnexpectedValueException("Unknown family option {$family}");
             }
             return $family;
         });
