@@ -1,0 +1,32 @@
+{
+  "name": "sidus/eav-bootstrap-bundle",
+  "description": "Bootstrap implementation and helpers for Sidus/EAVModelBundle",
+  "keywords": [ "eav", "bootstrap" ],
+  "homepage": "https://github.com/VincentChalnot/SidusEAVBootstrapBundle",
+  "type": "library",
+  "license": "GPL-2.0",
+  "authors": [
+    {
+      "name": "Vincent Chalnot",
+      "email": "vincent@sidus.fr",
+      "homepage": "http://chalnot.fr",
+      "role": "Developer"
+    }
+  ],
+  "target-dir": "Sidus/EAVBootstrapBundle",
+  "autoload": {
+    "psr-0": { "Sidus\\EAVBootstrapBundle": "" }
+  },
+  "require": {
+    "sidus/eav-model-bundle": "dev-master",
+
+    "samson/autocomplete-bundle": "~2.0.3",
+    "pinano/select2-bundle": "~3.5.2",
+
+    "mopa/bootstrap-bundle": "~3.0",
+    "twbs/bootstrap-sass": "~3.3.0",
+    "components/jquery": "~1.11",
+    "components/jqueryui": "~1.11",
+    "robloach/component-installer": "~0.2",
+  }
+}
