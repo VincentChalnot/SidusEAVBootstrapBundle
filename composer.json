@@ -27,6 +27,6 @@
     "twbs/bootstrap-sass": "~3.3.0",
     "components/jquery": "~1.11",
     "components/jqueryui": "~1.11",
-    "robloach/component-installer": "~0.2",
+    "robloach/component-installer": "~0.2"
   }
 }
