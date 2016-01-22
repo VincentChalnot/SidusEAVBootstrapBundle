@@ -16,11 +16,7 @@ class DatePickerType extends AbstractType
     {
         $resolver->setDefaults([
             'widget' => 'single_text',
-            'datepicker' => [
-                'attr' => [
-                    'class' => 'input-group date col-lg-3',
-                ],
-            ],
+            'datepicker' => true,
         ]);
     }
 

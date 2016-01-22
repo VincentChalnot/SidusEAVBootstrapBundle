@@ -51,7 +51,6 @@ class DataType extends \Sidus\EAVModelBundle\Form\DataType
     {
         $resolver->setDefaults([
             'data_class' => $this->dataClass,
-            'tabs_class' => 'nav nav-pills',
         ]);
     }
 

@@ -1,0 +1,12 @@
+.tab-content {
+  margin-top: 10px;
+}
+
+.input-group {
+  &.date {
+    width: 160px;
+  }
+  &.datetime {
+    width: 220px;
+  }
+}
