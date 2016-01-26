@@ -6,6 +6,9 @@
         return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     };
 
+    /**
+     * Make bootstrap collection sortable, reorder properly the name of the input
+     */
     $(document).ready(function() {
         /* Initialize bootstrap collection sortable */
         $('.bootstrap-collection').sortable({

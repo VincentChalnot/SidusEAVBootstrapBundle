@@ -51,6 +51,9 @@ class DataType extends \Sidus\EAVModelBundle\Form\DataType
     {
         $resolver->setDefaults([
             'data_class' => $this->dataClass,
+            'attr' => [
+                'novalidate' => 'novalidate',
+            ],
         ]);
     }
 
