@@ -1,6 +1,6 @@
 <?php
 
-namespace Sidus\EAVBootstrapBundle\Form;
+namespace Sidus\EAVBootstrapBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\Exception\AccessException;

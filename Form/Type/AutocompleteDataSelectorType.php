@@ -1,6 +1,6 @@
 <?php
 
-namespace Sidus\EAVBootstrapBundle\Form;
+namespace Sidus\EAVBootstrapBundle\Form\Type;
 
 use Doctrine\ORM\EntityRepository;
 use Sidus\EAVModelBundle\Configuration\FamilyConfigurationHandler;

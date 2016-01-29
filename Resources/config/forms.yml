@@ -1,10 +1,10 @@
 parameters:
-    sidus_eav_model.form.type.data.class: Sidus\EAVBootstrapBundle\Form\DataType
-    sidus_eav_model.form.type.autocomplete_data_selector.class: Sidus\EAVBootstrapBundle\Form\AutocompleteDataSelectorType
-    sidus_eav_model.form.type.sidus_bootstrap_collection.class: Sidus\EAVBootstrapBundle\Form\BootstrapCollectionType
-    sidus_eav_model.form.type.sidus_date_picker.class: Sidus\EAVBootstrapBundle\Form\DatePickerType
-    sidus_eav_model.form.type.sidus_datetime_picker.class: Sidus\EAVBootstrapBundle\Form\DateTimePickerType
-    sidus_eav_model.form.type.sidus_wysiwyg.class: Sidus\EAVBootstrapBundle\Form\WysiwygType
+    sidus_eav_model.form.type.data.class: Sidus\EAVBootstrapBundle\Form\Type\DataType
+    sidus_eav_model.form.type.autocomplete_data_selector.class: Sidus\EAVBootstrapBundle\Form\Type\AutocompleteDataSelectorType
+    sidus_eav_model.form.type.sidus_bootstrap_collection.class: Sidus\EAVBootstrapBundle\Form\Type\BootstrapCollectionType
+    sidus_eav_model.form.type.sidus_date_picker.class: Sidus\EAVBootstrapBundle\Form\Type\DatePickerType
+    sidus_eav_model.form.type.sidus_datetime_picker.class: Sidus\EAVBootstrapBundle\Form\Type\DateTimePickerType
+    sidus_eav_model.form.type.sidus_wysiwyg.class: Sidus\EAVBootstrapBundle\Form\Type\WysiwygType
 
 services:
     sidus_eav_model.form.type.autocomplete_data_selector:
