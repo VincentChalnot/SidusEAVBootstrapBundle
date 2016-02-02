@@ -55,10 +55,10 @@ class AutocompleteDataSelectorType extends AbstractType
         $family = $options['family_code'];
         $qb = $this->repository->createQueryBuilder('d');
         $qb->innerJoin('d.values', 'v')
-            ->andWhere('d.familyCode = :familyCode')
+            ->andWhere('d.family = :family')
             ->andWhere('v.attributeCode = :attributeCode')
             ->setParameter('attributeCode', $family->getAttributeAsLabel()->getCode())
-            ->setParameter('familyCode', $family->getCode());
+            ->setParameter('family', $family->getCode());
         $builder->setAttribute('query-builder', $qb);
     }
 

@@ -22,7 +22,7 @@ class DataType extends BaseDataType
     {
         /** @var Data $data */
         $data = $builder->getData();
-        $family = $this->familyConfigurationHandler->getFamily($data->getFamilyCode());
+        $family = $data->getFamily();
         foreach ($family->getAttributes() as $attribute) {
             if ($attribute->getGroup()) {
                 $tabName = '__tab_' . $attribute->getGroup();
