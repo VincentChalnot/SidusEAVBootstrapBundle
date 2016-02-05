@@ -33,7 +33,7 @@ class DataType extends BaseDataType
                     if ($icon) {
                         $tabOptions['icon'] = $icon;
                     }
-                    $form->add($tabName, TabType::class, $tabOptions);
+                    $form->add($tabName, 'tab', $tabOptions);
                 }
                 $this->addAttribute($form->get($tabName), $attribute, $family);
             } else {
