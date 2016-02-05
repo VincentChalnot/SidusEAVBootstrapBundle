@@ -67,10 +67,10 @@ class DataType extends BaseDataType
     protected function getGroupLabel(FamilyInterface $family, $groupName)
     {
         $transKeys = [
-            "{$family->getCode()}.group.{$groupName}.label",
-            "groups.{$groupName}.label",
+            "eav.family.{$family->getCode()}.group.{$groupName}.label",
+            "eav.group.{$groupName}.label",
         ];
-        return $this->translateOrDefault($transKeys, $groupName);
+        return ucfirst($this->tryTranslate($transKeys, [], $groupName));
     }
 
     /**
@@ -84,9 +84,9 @@ class DataType extends BaseDataType
     protected function getGroupIcon(FamilyInterface $family, $groupName)
     {
         $transKeys = [
-            "{$family->getCode()}.group.{$groupName}.icon",
-            "groups.{$groupName}.icon",
+            "eav.family.{$family->getCode()}.group.{$groupName}.icon",
+            "eav.group.{$groupName}.icon",
         ];
-        return $this->translateOrDefault($transKeys, $groupName);
+        return $this->tryTranslate($transKeys, []);
     }
 }

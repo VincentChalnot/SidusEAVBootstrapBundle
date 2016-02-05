@@ -3,18 +3,27 @@
 namespace Sidus\EAVBootstrapBundle\Twig;
 
 use Sidus\EAVModelBundle\Configuration\FamilyConfigurationHandler;
+use Sidus\EAVModelBundle\Translator\TranslatableTrait;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;
 use Twig_SimpleFunction;
 
 class SidusTwigExtension extends Twig_Extension
 {
+    use TranslatableTrait;
+
     /** @var FamilyConfigurationHandler */
     protected $familyConfigurationHandler;
 
-    public function __construct(FamilyConfigurationHandler $familyConfigurationHandler)
+    /**
+     * @param FamilyConfigurationHandler $familyConfigurationHandler
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(FamilyConfigurationHandler $familyConfigurationHandler, TranslatorInterface $translator)
     {
         $this->familyConfigurationHandler = $familyConfigurationHandler;
+        $this->translator = $translator;
     }
 
     public function getName()
@@ -27,6 +36,7 @@ class SidusTwigExtension extends Twig_Extension
         return [
             new Twig_SimpleFunction('form_has_error', [$this, 'formHasError']),
             new Twig_SimpleFunction('get_families', [$this, 'getFamilies']),
+            new Twig_SimpleFunction('tryTrans', [$this, 'tryTrans'])
         ];
     }
 
@@ -46,5 +56,16 @@ class SidusTwigExtension extends Twig_Extension
     public function getFamilies()
     {
         return $this->familyConfigurationHandler->getFamilies();
+    }
+
+    /**
+     * @param string|array $tIds
+     * @param array $parameters
+     * @param string|null $fallback
+     * @return string
+     */
+    public function tryTrans($tIds, array $parameters = [], $fallback = null)
+    {
+        return $this->tryTranslate($tIds, $parameters, $fallback);
     }
 }
