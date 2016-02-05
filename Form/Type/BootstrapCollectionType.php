@@ -25,6 +25,8 @@ class BootstrapCollectionType extends AbstractType
                 'sub_widget_col' => $options['sub_widget_col'],
                 'button_col' => $options['button_col'],
                 'prototype_name' => $options['prototype_name'],
+                'add_button_text' => $options['add_button_text'],
+                'delete_button_text' => $options['delete_button_text'],
             ]
         );
         if (false === $view->vars['allow_delete']) {
@@ -52,8 +54,8 @@ class BootstrapCollectionType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__name__',
             'type' => 'text',
-            'add_button_text' => 'Add',
-            'delete_button_text' => 'Delete',
+            'add_button_text' => 'sidus.collection.add',
+            'delete_button_text' => 'sidus.collection.delete',
             'sub_widget_col' => 10,
             'button_col' => 2,
             'options' => [],

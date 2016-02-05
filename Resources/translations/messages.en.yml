@@ -1,0 +1,4 @@
+sidus:
+    collection:
+        add: Add
+        delete: Delete
