@@ -2,11 +2,10 @@
 
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
+use Mopa\Bundle\BootstrapBundle\Form\Type\TabType;
 use Sidus\EAVModelBundle\Entity\Data;
 use Sidus\EAVModelBundle\Form\Type\DataType as BaseDataType;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
-use Symfony\Component\Form\Exception\InvalidArgumentException;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\Exception\AccessException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -34,7 +33,7 @@ class DataType extends BaseDataType
                     if ($icon) {
                         $tabOptions['icon'] = $icon;
                     }
-                    $form->add($tabName, 'tab', $tabOptions);
+                    $form->add($tabName, TabType::class, $tabOptions);
                 }
                 $this->addAttribute($form->get($tabName), $attribute, $family);
             } else {
