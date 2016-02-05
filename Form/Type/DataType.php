@@ -7,26 +7,25 @@ use Sidus\EAVModelBundle\Form\Type\DataType as BaseDataType;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
 use Symfony\Component\Form\Exception\InvalidArgumentException;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\Exception\AccessException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DataType extends BaseDataType
 {
     /**
-     * @param FormBuilderInterface $builder
+     * @param Data $data
+     * @param FormInterface $form
      * @param array $options
-     * @throws InvalidArgumentException
-     * @throws \InvalidArgumentException
+     * @throws \Exception
      */
-    public function buildValuesForm(FormBuilderInterface $builder, array $options)
+    public function buildValuesForm(Data $data, FormInterface $form, array $options)
     {
-        /** @var Data $data */
-        $data = $builder->getData();
         $family = $data->getFamily();
         foreach ($family->getAttributes() as $attribute) {
             if ($attribute->getGroup()) {
                 $tabName = '__tab_' . $attribute->getGroup();
-                if (!$builder->has($tabName)) {
+                if (!$form->has($tabName)) {
                     $tabOptions = [
                         'label' => $this->getGroupLabel($family, $attribute->getGroup()),
                         'inherit_data' => true,
@@ -35,11 +34,11 @@ class DataType extends BaseDataType
                     if ($icon) {
                         $tabOptions['icon'] = $icon;
                     }
-                    $builder->add($tabName, 'tab', $tabOptions);
+                    $form->add($tabName, 'tab', $tabOptions);
                 }
-                $this->addAttribute($builder->get($tabName), $attribute, $family);
+                $this->addAttribute($form->get($tabName), $attribute, $family);
             } else {
-                $this->addAttribute($builder, $attribute, $family);
+                $this->addAttribute($form, $attribute, $family);
             }
         }
     }
