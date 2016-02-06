@@ -1,0 +1,72 @@
+$switch_height: 34px !default; // Default input height in bootstrap
+$switch_width: $switch_height * 2 !default;
+$switch_radius: $border-radius-base !default;
+//$switch_radius: $switch_size / 2; // Round style
+$switch_offset: 2px !default;
+$switch_font_size: $switch_height / 2.2 !default;
+$switch_on_text: 'ON' !default;
+$switch_off_text: 'OFF' !default;
+
+.sidus-switch {
+  display: inline-block;
+  vertical-align: middle;
+  height: $switch_height;
+  @include user-select(none);
+
+  label {
+    display: inline-block;
+    border-radius: $switch_radius;
+    background: $gray-light;
+    height: $switch_height - 2;
+    width: $switch_width;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    //box-shadow: inset 0px 1px 3px #666;
+
+    .slider {
+      display: block;
+      height: $switch_height - $switch_offset * 3;
+      width: $switch_height - $switch_offset * 3;
+      border-radius: $switch_radius - 2;
+      background: $body-bg;
+      position: absolute;
+      top: $switch_offset;
+      right: $switch_offset;
+      @include transition(all .2s ease);
+
+      &:after {
+        content: $switch_off_text;
+        color: darken($gray-light, 20%);
+        font-size: $switch_font_size;
+        display: block;
+        position: absolute;
+        top: $switch_height / 10 - $switch_offset / 2;
+        left: -$switch_height;
+      }
+    }
+  }
+
+  input[type=checkbox] {
+    // Hide checkbox behind
+    visibility: hidden;
+    position: absolute;
+    left: 20px;
+    top: 5px;
+
+    &:checked + label {
+      background: $btn-primary-bg;
+
+      .slider {
+        background: $body-bg;
+        right: $switch_width / 2 + $switch_offset * 2; // Additionnal border
+
+        &:after {
+          content: $switch_on_text;
+          color: $body-bg;
+          left: $switch_height;
+        }
+      }
+    }
+  }
+}

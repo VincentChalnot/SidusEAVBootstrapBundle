@@ -2,15 +2,14 @@
 
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
-use Mopa\Bundle\BootstrapBundle\Form\Type\TabType;
 use Sidus\EAVModelBundle\Entity\Data;
-use Sidus\EAVModelBundle\Form\Type\DataType as BaseDataType;
+use Sidus\EAVModelBundle\Form\Type\DataType as DataType;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\Exception\AccessException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DataType extends BaseDataType
+class TabbedDataType extends DataType
 {
     /**
      * @param Data $data
@@ -88,5 +87,13 @@ class DataType extends BaseDataType
             "eav.group.{$groupName}.icon",
         ];
         return $this->tryTranslate($transKeys, []);
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'sidus_tabbed_data';
     }
 }

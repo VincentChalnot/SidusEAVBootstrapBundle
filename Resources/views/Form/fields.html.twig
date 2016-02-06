@@ -54,3 +54,14 @@
 {% block autocomplete_row %}
     {{ block('form_row') }}
 {% endblock %}
+
+{% block sidus_switch_widget -%}
+    {% spaceless %}
+        <div class="sidus-switch">
+            <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+            <label for="{{ id }}">
+                <span class="slider"></span>
+            </label>
+        </div>
+    {% endspaceless %}
+{%- endblock %}

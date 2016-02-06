@@ -8,8 +8,3 @@ services:
         tags:
             - { name: 'twig.extension' }
 
-    # Support for Symfony 2.8 : MopaBootstrapBundle doesn't use the alias for the tab type anymore
-    sidus_eav_bootstrap.form.tab.type:
-        parent: mopa_bootstrap.form.type.tab
-        tags:
-            - { name: form.type, alias: tab }

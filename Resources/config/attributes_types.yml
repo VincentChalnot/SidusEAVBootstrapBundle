@@ -17,8 +17,14 @@ services:
         tags:
             - { name: sidus.attribute_type }
 
-    sidus_eav_model.attribute_type.autocomplete_data:
+    sidus_eav_bootstrap.attribute_type.autocomplete_data:
         class: %sidus_eav_model.attribute_type.default.class%
         arguments: [autocomplete_data, dataValue, sidus_autocomplete_data_selector]
+        tags:
+            - { name: sidus.attribute_type }
+
+    sidus_eav_bootstrap.attribute_type.switch:
+        class: %sidus_eav_model.attribute_type.default.class%
+        arguments: [switch, boolValue, sidus_switch]
         tags:
             - { name: sidus.attribute_type }
