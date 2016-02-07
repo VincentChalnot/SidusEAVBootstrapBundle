@@ -27,6 +27,7 @@ class BootstrapCollectionType extends AbstractType
                 'prototype_name' => $options['prototype_name'],
                 'add_button_text' => $options['add_button_text'],
                 'delete_button_text' => $options['delete_button_text'],
+                'sortable' => $options['sortable'],
             ]
         );
         if (false === $view->vars['allow_delete']) {
@@ -59,6 +60,7 @@ class BootstrapCollectionType extends AbstractType
             'sub_widget_col' => 10,
             'button_col' => 2,
             'options' => [],
+            'sortable' => true,
         ]);
         $resolver->setNormalizer('options', $optionsNormalizer);
     }

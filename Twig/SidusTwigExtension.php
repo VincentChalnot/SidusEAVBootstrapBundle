@@ -36,7 +36,8 @@ class SidusTwigExtension extends Twig_Extension
         return [
             new Twig_SimpleFunction('form_has_error', [$this, 'formHasError']),
             new Twig_SimpleFunction('get_families', [$this, 'getFamilies']),
-            new Twig_SimpleFunction('tryTrans', [$this, 'tryTrans'])
+            new Twig_SimpleFunction('get_root_families', [$this, 'getRootFamilies']),
+            new Twig_SimpleFunction('tryTrans', [$this, 'tryTrans']),
         ];
     }
 
@@ -56,6 +57,11 @@ class SidusTwigExtension extends Twig_Extension
     public function getFamilies()
     {
         return $this->familyConfigurationHandler->getFamilies();
+    }
+
+    public function getRootFamilies()
+    {
+        return $this->familyConfigurationHandler->getRootFamilies();
     }
 
     /**
