@@ -4,6 +4,7 @@ namespace Sidus\EAVBootstrapBundle\Form\Type;
 
 use Doctrine\ORM\EntityRepository;
 use Sidus\EAVModelBundle\Configuration\FamilyConfigurationHandler;
+use Sidus\EAVModelBundle\Exception\MissingFamilyException;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -68,6 +69,7 @@ class AutocompleteDataSelectorType extends AbstractType
      * @throws AccessException
      * @throws UndefinedOptionsException
      * @throws UnexpectedValueException
+     * @throws MissingFamilyException
      */
     public function configureOptions(OptionsResolver $resolver)
     {

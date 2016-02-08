@@ -12,12 +12,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class TabbedDataType extends DataType
 {
     /**
-     * @param Data $data
-     * @param FormInterface $form
-     * @param array $options
-     * @throws \Exception
+     * @inheritdoc
      */
-    public function buildValuesForm(Data $data, FormInterface $form, array $options)
+    public function buildValuesForm(FormInterface $form, FamilyInterface $family, Data $data = null, array $options = [])
     {
         $family = $data->getFamily();
         foreach ($family->getAttributes() as $attribute) {
