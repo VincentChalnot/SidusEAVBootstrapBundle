@@ -45,24 +45,13 @@ class BootstrapCollectionType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $optionsNormalizer = function (Options $options, $value) {
-            $value['block_name'] = 'entry';
-            return $value;
-        };
         $resolver->setDefaults([
-            'allow_add' => false,
-            'allow_delete' => false,
-            'prototype' => true,
-            'prototype_name' => '__name__',
-            'type' => 'text',
             'add_button_text' => 'sidus.collection.add',
             'delete_button_text' => 'sidus.collection.delete',
             'sub_widget_col' => 10,
             'button_col' => 2,
-            'options' => [],
             'sortable' => true,
         ]);
-        $resolver->setNormalizer('options', $optionsNormalizer);
     }
 
     /**

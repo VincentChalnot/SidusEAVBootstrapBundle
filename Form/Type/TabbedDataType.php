@@ -39,16 +39,13 @@ class TabbedDataType extends DataType
     }
 
     /**
-     * @param OptionsResolver $resolver
-     * @throws AccessException
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => $this->dataClass,
-            'attr' => [
-                'novalidate' => 'novalidate',
-            ],
+        parent::configureOptions($resolver);
+        $resolver->setDefault('attr', [
+            'novalidate' => 'novalidate',
         ]);
     }
 

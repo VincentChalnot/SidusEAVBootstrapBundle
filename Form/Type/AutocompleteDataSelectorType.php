@@ -53,7 +53,7 @@ class AutocompleteDataSelectorType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         /** @var FamilyInterface $family */
-        $family = $options['family_code'];
+        $family = $options['family'];
         $qb = $this->repository->createQueryBuilder('d');
         $qb->innerJoin('d.values', 'v')
             ->andWhere('d.family = :family')
@@ -74,7 +74,7 @@ class AutocompleteDataSelectorType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired([
-            'family_code',
+            'family',
         ]);
 
         $resolver->setDefaults([
@@ -82,13 +82,12 @@ class AutocompleteDataSelectorType extends AbstractType
             'search_fields' => ['v.stringValue'],
             'template' => 'SidusEAVModelBundle:Data:data_autocomplete.html.twig',
         ]);
-        $familyConfigurationHandler = $this->familyConfigurationHandler;
-        $resolver->setNormalizer('family_code', function (Options $options, $value) use ($familyConfigurationHandler) {
-            $family = $familyConfigurationHandler->getFamily($value);
-            if (!$family) {
-                throw new UnexpectedValueException("Unknown family option {$family}");
+
+        $resolver->setNormalizer('family', function (Options $options, $value) {
+            if ($value instanceof FamilyInterface) {
+                return $value;
             }
-            return $family;
+            return $this->familyConfigurationHandler->getFamily($value);
         });
     }
 

@@ -14,25 +14,26 @@
             <ul class="bootstrap-collection {{ sortable ? 'sortable-collection' }}"
                 data-input-pattern="{{ prototype.vars.full_name }}">
                 {% for field in form %}
-                    <li{% if form_has_error(field) %} class="has-error"{% endif %}>{{ block('sidus_bootstrap_collection_item') }}</li>
+                    <li>{{ block('sidus_bootstrap_collection_item') }}</li>
                 {% endfor %}
             </ul>
             {{ form_errors(form) }}
-            {% if form.vars.allow_add %}
-                <a href="#{{ form.vars.id }}" class="btn btn-success"
-                   data-addfield="collection" data-collection="{{ form.vars.id }}"
-                   data-prototype-name="{{ prototype_name }}" title="{{ form.vars.add_button_text|trans }}">
-                    <i class="fa fa-plus"></i>
-                </a>
-            {% endif %}
+            {{ block('sidus_bootstrap_collection_add_button') }}
         </div>
     {% endspaceless %}
 {% endblock %}
 
-{% block sidus_bootstrap_collection_item %}
-    {% if form_has_error(field) %}
-        <i class="fa fa-warning"></i>
+{% block sidus_bootstrap_collection_add_button %}
+    {% if form.vars.allow_add %}
+        <a href="#{{ form.vars.id }}" class="btn btn-success"
+           data-addfield="collection" data-collection="{{ form.vars.id }}"
+           data-prototype-name="{{ prototype_name }}" title="{{ form.vars.add_button_text|trans }}">
+            <i class="fa fa-plus"></i>
+        </a>
     {% endif %}
+{% endblock %}
+
+{% block sidus_bootstrap_collection_item %}
     {% if not form.vars.disabled and form.vars.sortable %}
         <i class="fa fa-bars position-handler"></i>
     {% endif %}

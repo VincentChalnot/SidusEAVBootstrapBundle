@@ -10,3 +10,10 @@
     width: 220px;
   }
 }
+
+.list-group-item {
+  .btn.pull-right, .btn-group.pull-right {
+    margin-top: -7px;
+    margin-right: -12px;
+  }
+}
