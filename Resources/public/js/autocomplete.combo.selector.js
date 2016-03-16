@@ -1,17 +1,25 @@
 
 "use strict"; // jshint ;_;
 
-function initComboSelector(target) {
-    $(target).find('.sidus-combo-selector select').on('change', function(e){
-        var t = $(this);
-        var w = t.parents('.sidus-combo-selector').first();
-        w.find('.select2').select2('destroy');
-        w.find('input[data-family="' + t.val() + '"]')
-            .addClass('select2')
-            .samsonSelect2();
-    });
+function updateComboSelector(target) {
+    var widget = target.parents('.sidus-combo-selector').first();
+    widget.find('.select2').removeClass('select2').select2('destroy');
+    widget.find('input[data-family="' + target.val() + '"]')
+        .addClass('select2')
+        .samsonSelect2();
 }
 
+function initComboSelector(target) {
+    $(target).find('.sidus-combo-selector select').each(function(){
+        var t = $(this);
+        if (t.val()) {
+            updateComboSelector(t);
+        }
+        t.on('change', function(){
+            updateComboSelector(t);
+        });
+    });
+}
 
 !function ($) {
     $(document).ready(function() {
