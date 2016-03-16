@@ -2,3 +2,6 @@ sidus:
     collection:
         add: Add
         delete: Delete
+    family:
+        selector:
+            empty_value: Please select a family

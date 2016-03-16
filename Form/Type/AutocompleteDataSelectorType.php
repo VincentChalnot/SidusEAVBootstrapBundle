@@ -41,28 +41,33 @@ class AutocompleteDataSelectorType extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        if (empty($view->vars['attr']['class'])) {
-            $view->vars['attr']['class'] = 'select2';
-        } else {
-            $view->vars['attr']['class'] .= ' select2';
+        if ($options['auto_init']) {
+            if (empty($view->vars['attr']['class'])) {
+                $view->vars['attr']['class'] = 'select2';
+            } else {
+                $view->vars['attr']['class'] .= ' select2';
+            }
         }
         $view->vars['attr']['data-placeholder'] = $options['placeholder'];
+        $view->vars['family'] = $options['family'];
     }
 
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $qb = $this->repository->createQueryBuilder('d');
+        $qb->innerJoin('d.values', 'v');
+
         /** @var FamilyInterface $family */
         $family = $options['family'];
-        $qb = $this->repository->createQueryBuilder('d');
-        $qb->innerJoin('d.values', 'v')
-            ->andWhere('d.family = :family')
-            ->andWhere('v.attributeCode = :attributeCode')
-            ->setParameter('attributeCode', $family->getAttributeAsLabel()->getCode())
-            ->setParameter('family', $family->getCode());
+        if ($family) {
+            $qb->andWhere('d.family = :family')
+                ->andWhere('v.attributeCode = :attributeCode')
+                ->setParameter('attributeCode', $family->getAttributeAsLabel()->getCode())
+                ->setParameter('family', $family->getCode());
+        }
         $builder->setAttribute('query-builder', $qb);
     }
-
 
     /**
      * @param OptionsResolver $resolver
@@ -73,21 +78,28 @@ class AutocompleteDataSelectorType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired([
-            'family',
-        ]);
-
         $resolver->setDefaults([
             'class' => $this->dataClass,
             'search_fields' => ['v.stringValue'],
             'template' => 'SidusEAVModelBundle:Data:data_autocomplete.html.twig',
+            'family' => null,
+            'auto_init' => true,
         ]);
 
         $resolver->setNormalizer('family', function (Options $options, $value) {
+            if (null === $value) {
+                return null;
+            }
             if ($value instanceof FamilyInterface) {
                 return $value;
             }
             return $this->familyConfigurationHandler->getFamily($value);
+        });
+        $resolver->setNormalizer('disabled', function (Options $options, $value) {
+            if (null === $options['family']) {
+                return true;
+            }
+            return $value;
         });
     }
 
