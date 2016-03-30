@@ -24,7 +24,7 @@
 {% endblock %}
 
 {% block sidus_bootstrap_collection_add_button %}
-    {% if form.vars.allow_add %}
+    {% if not form.vars.disabled and form.vars.allow_add %}
         <a href="#{{ form.vars.id }}" class="btn btn-success"
            data-addfield="collection" data-collection="{{ form.vars.id }}"
            data-prototype-name="{{ prototype_name }}" title="{{ form.vars.add_button_text|trans }}">
@@ -38,7 +38,7 @@
         <i class="fa fa-bars position-handler"></i>
     {% endif %}
     {{ form_widget(field) }}
-    {% if form.vars.allow_delete %}
+    {% if not form.vars.disabled and form.vars.allow_delete %}
         <a href="#" class="btn btn-danger pull-right remove-action" data-removefield="collection"
            data-field="{{ field.vars.id }}" title="{{ form.vars.delete_button_text|trans }}">
             <i class="fa fa-trash-o"></i>
@@ -66,3 +66,11 @@
         </div>
     {% endspaceless %}
 {%- endblock %}
+
+{% block sidus_wysiwyg_widget %}
+    {% if form.vars.disabled %}
+        <div class="form-control form-disabled" disabled="disabled">{{ value|raw }}</div>
+    {% else %}
+        {{ form_widget(form) }}
+    {% endif %}
+{% endblock %}

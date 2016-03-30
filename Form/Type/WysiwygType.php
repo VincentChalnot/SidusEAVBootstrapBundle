@@ -12,7 +12,6 @@ class WysiwygType extends AbstractType
 {
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-
         if ($options['tinymce_theme']) {
             $view->vars['attr']['data-theme'] = $options['tinymce_theme'];
         }
