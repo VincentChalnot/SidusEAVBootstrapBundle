@@ -22,7 +22,7 @@
 
     "samson/autocomplete-bundle": "~2.0.3",
     "pinano/select2-bundle": "~3.5.2",
-    "stfalcon/tinymce-bundle": "dev-master",
+    "stfalcon/tinymce-bundle": "2.*",
 
     "mopa/bootstrap-bundle": "~3.0",
     "twbs/bootstrap-sass": "~3.3.0",
