@@ -6,7 +6,6 @@ use Sidus\EAVModelBundle\Entity\Data;
 use Sidus\EAVModelBundle\Form\Type\DataType as DataType;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\Exception\AccessException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TabbedDataType extends DataType
