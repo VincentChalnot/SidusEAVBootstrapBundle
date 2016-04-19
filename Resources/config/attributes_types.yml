@@ -23,6 +23,12 @@ services:
         tags:
             - { name: sidus.attribute_type }
 
+    sidus_eav_bootstrap.attribute_type.combo_selector:
+        class: %sidus_eav_model.attribute_type.default.class%
+        arguments: [combo_selector, dataValue, sidus_combo_data_selector]
+        tags:
+            - { name: sidus.attribute_type }
+
     sidus_eav_bootstrap.attribute_type.switch:
         class: %sidus_eav_model.attribute_type.default.class%
         arguments: [switch, boolValue, sidus_switch]

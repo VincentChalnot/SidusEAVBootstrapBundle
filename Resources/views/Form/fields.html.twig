@@ -74,3 +74,18 @@
         {{ form_widget(form) }}
     {% endif %}
 {% endblock %}
+
+{% block sidus_combo_data_selector_widget %}
+    {% spaceless %}
+        <div class="row sidus-combo-selector">
+            <div class="col-md-5 col-xs-12">
+                {{ form_widget(form.family) }}
+            </div>
+            <div class="col-md-7 col-xs-12">
+                {% for widget in form %}
+                    {{ form_widget(widget) }}
+                {% endfor %}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock %}
