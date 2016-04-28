@@ -2,8 +2,8 @@
 
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
-use Sidus\EAVModelBundle\Entity\Data;
-use Sidus\EAVModelBundle\Form\Type\DataType as DataType;
+use Sidus\EAVModelBundle\Entity\DataInterface;
+use Sidus\EAVModelBundle\Form\Type\DataType;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,7 +13,7 @@ class TabbedDataType extends DataType
     /**
      * @inheritdoc
      */
-    public function buildValuesForm(FormInterface $form, FamilyInterface $family, Data $data = null, array $options = [])
+    public function buildValuesForm(FormInterface $form, FamilyInterface $family, DataInterface $data = null, array $options = [])
     {
         $family = $data->getFamily();
         foreach ($family->getAttributes() as $attribute) {

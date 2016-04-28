@@ -3,7 +3,7 @@
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
 use Sidus\EAVModelBundle\Configuration\FamilyConfigurationHandler;
-use Sidus\EAVModelBundle\Entity\Data;
+use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -49,13 +49,13 @@ class ComboDataSelectorType extends AbstractType
         ]);
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
             $form = $event->getForm();
-            /** @var Data $data */
+            /** @var DataInterface $data */
             $data = $event->getData();
 
             /** @var FamilyInterface $family */
             foreach ($options['families'] as $family) {
                 $selected = false;
-                if ($data instanceof Data) {
+                if ($data instanceof DataInterface) {
                     $selected = $family->getCode() === $data->getFamilyCode();
                 }
                 $form->add('data_' . $family->getCode(), 'sidus_autocomplete_data_selector', [
@@ -71,7 +71,7 @@ class ComboDataSelectorType extends AbstractType
 
         $builder->addModelTransformer(new CallbackTransformer(
             function ($originalData) {
-                if ($originalData instanceof Data) {
+                if ($originalData instanceof DataInterface) {
                     return [
                         'family' => $originalData->getFamily(),
                         'data_' . $originalData->getFamilyCode() => $originalData,
