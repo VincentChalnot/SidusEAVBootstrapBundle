@@ -28,17 +28,25 @@ class AutocompleteDataSelectorType extends AbstractType
     protected $familyConfigurationHandler;
 
     /**
-     * @param $dataClass
-     * @param EntityRepository $repository
+     * @param string                     $dataClass
+     * @param EntityRepository           $repository
      * @param FamilyConfigurationHandler $familyConfigurationHandler
      */
-    public function __construct($dataClass, EntityRepository $repository, FamilyConfigurationHandler $familyConfigurationHandler)
-    {
+    public function __construct(
+        $dataClass,
+        EntityRepository $repository,
+        FamilyConfigurationHandler $familyConfigurationHandler
+    ) {
         $this->dataClass = $dataClass;
         $this->repository = $repository;
         $this->familyConfigurationHandler = $familyConfigurationHandler;
     }
 
+    /**
+     * @param FormView      $view
+     * @param FormInterface $form
+     * @param array         $options
+     */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         if ($options['auto_init']) {
@@ -52,7 +60,10 @@ class AutocompleteDataSelectorType extends AbstractType
         $view->vars['family'] = $options['family'];
     }
 
-
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array                $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $qb = $this->repository->createQueryBuilder('d');
@@ -61,10 +72,16 @@ class AutocompleteDataSelectorType extends AbstractType
         /** @var FamilyInterface $family */
         $family = $options['family'];
         if ($family) {
-            $qb->andWhere('d.family = :family')
-                ->andWhere('v.attributeCode = :attributeCode')
-                ->setParameter('attributeCode', $family->getAttributeAsLabel()->getCode())
-                ->setParameter('family', $family->getCode());
+            $qb
+                ->andWhere('d.family = :family')
+                ->setParameter('family', $family->getCode())
+            ;
+            if ($family->getAttributeAsLabel()) {
+                $qb
+                    ->andWhere('v.attributeCode = :attributeCode')
+                    ->setParameter('attributeCode', $family->getAttributeAsLabel()->getCode())
+                ;
+            }
         }
         $builder->setAttribute('query-builder', $qb);
     }
@@ -93,16 +110,21 @@ class AutocompleteDataSelectorType extends AbstractType
             if ($value instanceof FamilyInterface) {
                 return $value;
             }
+
             return $this->familyConfigurationHandler->getFamily($value);
         });
         $resolver->setNormalizer('disabled', function (Options $options, $value) {
             if (null === $options['family']) {
                 return true;
             }
+
             return $value;
         });
     }
 
+    /**
+     * @return string
+     */
     public function getParent()
     {
         return 'autocomplete';
