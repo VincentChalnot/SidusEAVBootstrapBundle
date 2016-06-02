@@ -13,12 +13,16 @@ class TabbedDataType extends DataType
     /**
      * @inheritdoc
      */
-    public function buildValuesForm(FormInterface $form, FamilyInterface $family, DataInterface $data = null, array $options = [])
-    {
+    public function buildValuesForm(
+        FormInterface $form,
+        FamilyInterface $family,
+        DataInterface $data = null,
+        array $options = []
+    ) {
         $family = $data->getFamily();
         foreach ($family->getAttributes() as $attribute) {
             if ($attribute->getGroup()) {
-                $tabName = '__tab_' . $attribute->getGroup();
+                $tabName = '__tab_'.$family->getCode().'_'.$attribute->getGroup();
                 if (!$form->has($tabName)) {
                     $tabOptions = [
                         'label' => $this->getGroupLabel($family, $attribute->getGroup()),
@@ -49,10 +53,18 @@ class TabbedDataType extends DataType
     }
 
     /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'sidus_tabbed_data';
+    }
+
+    /**
      * Use label from formOptions or use translation or automatically create human readable one
      *
      * @param FamilyInterface $family
-     * @param string $groupName
+     * @param string          $groupName
      * @return string
      * @throws \InvalidArgumentException
      */
@@ -62,6 +74,7 @@ class TabbedDataType extends DataType
             "eav.family.{$family->getCode()}.group.{$groupName}.label",
             "eav.group.{$groupName}.label",
         ];
+
         return ucfirst($this->tryTranslate($transKeys, [], $groupName));
     }
 
@@ -69,7 +82,7 @@ class TabbedDataType extends DataType
      * Use label from formOptions or use translation or automatically create human readable one
      *
      * @param FamilyInterface $family
-     * @param string $groupName
+     * @param string          $groupName
      * @return string
      * @throws \InvalidArgumentException
      */
@@ -79,14 +92,7 @@ class TabbedDataType extends DataType
             "eav.family.{$family->getCode()}.group.{$groupName}.icon",
             "eav.group.{$groupName}.icon",
         ];
-        return $this->tryTranslate($transKeys, []);
-    }
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'sidus_tabbed_data';
+        return $this->tryTranslate($transKeys, []);
     }
 }

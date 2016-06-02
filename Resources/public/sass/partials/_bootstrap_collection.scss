@@ -16,6 +16,10 @@
       cursor: move;
       // @include user-select(none);
     }
+    & > .form-group {
+      margin-left: 0;
+      margin-right: 0;
+    }
   }
   &.sortable-collection {
     li {

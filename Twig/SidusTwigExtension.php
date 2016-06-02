@@ -4,7 +4,6 @@ namespace Sidus\EAVBootstrapBundle\Twig;
 
 use Sidus\EAVModelBundle\Configuration\FamilyConfigurationHandler;
 use Sidus\EAVModelBundle\Translator\TranslatableTrait;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;
 use Twig_SimpleFunction;
@@ -18,7 +17,7 @@ class SidusTwigExtension extends Twig_Extension
 
     /**
      * @param FamilyConfigurationHandler $familyConfigurationHandler
-     * @param TranslatorInterface $translator
+     * @param TranslatorInterface        $translator
      */
     public function __construct(FamilyConfigurationHandler $familyConfigurationHandler, TranslatorInterface $translator)
     {
@@ -26,15 +25,20 @@ class SidusTwigExtension extends Twig_Extension
         $this->translator = $translator;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'sidus_eav_model';
     }
 
+    /**
+     * @return array
+     */
     public function getFunctions()
     {
         return [
-            new Twig_SimpleFunction('form_has_error', [$this, 'formHasError']),
             new Twig_SimpleFunction('get_families', [$this->familyConfigurationHandler, 'getFamilies']),
             new Twig_SimpleFunction('get_root_families', [$this->familyConfigurationHandler, 'getRootFamilies']),
             new Twig_SimpleFunction('get_family', [$this->familyConfigurationHandler, 'getFamily']),
@@ -42,27 +46,15 @@ class SidusTwigExtension extends Twig_Extension
         ];
     }
 
-    public function formHasError(FormView $form)
-    {
-        if (0 < count($form->vars['errors'])) {
-            return true;
-        }
-        foreach ($form->children as $child) {
-            if ($this->formHasError($child)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * @param string|array $tIds
-     * @param array $parameters
-     * @param string|null $fallback
+     * @param array        $parameters
+     * @param string|null  $fallback
+     * @param bool         $humanizeFallback
      * @return string
      */
-    public function tryTrans($tIds, array $parameters = [], $fallback = null)
+    public function tryTrans($tIds, array $parameters = [], $fallback = null, $humanizeFallback = true)
     {
-        return $this->tryTranslate($tIds, $parameters, $fallback);
+        return $this->tryTranslate($tIds, $parameters, $fallback, $humanizeFallback);
     }
 }
