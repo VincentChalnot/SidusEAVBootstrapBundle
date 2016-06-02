@@ -38,6 +38,9 @@
         <i class="fa fa-bars position-handler"></i>
     {% endif %}
     {{ form_widget(field) }}
+    {% if prototype.children|length > 1 %}
+        <hr class="embed-separator"/>
+    {% endif %}
     {% if not form.vars.disabled and form.vars.allow_delete %}
         <a href="#" class="btn btn-danger pull-right remove-action" data-removefield="collection"
            data-field="{{ field.vars.id }}" title="{{ form.vars.delete_button_text|trans }}">
