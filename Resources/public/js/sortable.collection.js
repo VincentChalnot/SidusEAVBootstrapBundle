@@ -12,9 +12,10 @@ function sortableCollections(el) {
     $(el).find('.bootstrap-collection.sortable-collection').sortable({
         update: function () {
             var pattern = $(this).data('input-pattern');
-            var regex = new RegExp(RegExp.escape(pattern).replace('__name__', '\\d+'));
+            var prototypeName = $(this).parent().data('prototype-name');
+            var regex = new RegExp(RegExp.escape(pattern).replace(prototypeName, '\\d+'));
             $(this).find(':input[name]').each(function (idx) {
-                var newName = $(this).attr('name').replace(regex, pattern.replace('__name__', idx));
+                var newName = $(this).attr('name').replace(regex, pattern.replace(prototypeName, idx));
                 $(this).attr('name', newName);
             });
         }
