@@ -50,6 +50,7 @@ class BootstrapCollectionType extends AbstractType
             'sub_widget_col' => 10,
             'button_col' => 2,
             'sortable' => true,
+            'error_bubbling' => false,
         ]);
     }
 
