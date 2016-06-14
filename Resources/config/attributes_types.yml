@@ -1,36 +1,36 @@
 services:
     sidus_eav_model.attribute_type.html:
-        class: %sidus_eav_model.attribute_type.default.class%
+        class: '%sidus_eav_model.attribute_type.default.class%'
         arguments: [html, textValue, sidus_wysiwyg]
         tags:
             - { name: sidus.attribute_type }
 
     sidus_eav_model.attribute_type.date:
-        class: %sidus_eav_model.attribute_type.default.class%
+        class: '%sidus_eav_model.attribute_type.default.class%'
         arguments: [date, dateValue, sidus_date_picker]
         tags:
             - { name: sidus.attribute_type }
 
     sidus_eav_model.attribute_type.datetime:
-        class: %sidus_eav_model.attribute_type.default.class%
+        class: '%sidus_eav_model.attribute_type.default.class%'
         arguments: [datetime, datetimeValue, sidus_datetime_picker]
         tags:
             - { name: sidus.attribute_type }
 
     sidus_eav_bootstrap.attribute_type.autocomplete_data:
-        class: %sidus_eav_model.attribute_type.default.class%
+        class: '%sidus_eav_model.attribute_type.default.class%'
         arguments: [autocomplete_data, dataValue, sidus_autocomplete_data_selector]
         tags:
             - { name: sidus.attribute_type }
 
     sidus_eav_bootstrap.attribute_type.combo_selector:
-        class: %sidus_eav_model.attribute_type.default.class%
+        class: '%sidus_eav_model.attribute_type.default.class%'
         arguments: [combo_selector, dataValue, sidus_combo_data_selector]
         tags:
             - { name: sidus.attribute_type }
 
     sidus_eav_bootstrap.attribute_type.switch:
-        class: %sidus_eav_model.attribute_type.default.class%
+        class: '%sidus_eav_model.attribute_type.default.class%'
         arguments: [switch, boolValue, sidus_switch]
         tags:
             - { name: sidus.attribute_type }

@@ -92,3 +92,22 @@
         </div>
     {% endspaceless %}
 {% endblock %}
+
+{% block tabs_widget %}
+    {% spaceless %}
+        <ul class="{{ form.vars.attr.class }}">
+            {% for tab in form.vars.tabs %}
+                {% set class = (tab.active ? 'active ' : '') ~ (tab.disabled ? 'disabled' : '') %}
+                {% if not tab.valid %}
+                    {% set class = class ~ ' tab-danger' %}
+                {% endif %}
+                <li{% if class|trim is not empty %} class="{{ class }}"{% endif %}>
+                    <a data-toggle="tab" href="#{{ tab.id }}">
+                        {% if tab.icon %}{{ mopa_bootstrap_icon(tab.icon) }}{% endif %}
+                        {{ tab.label|trans({}, tab.translation_domain) }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endspaceless %}
+{% endblock %}

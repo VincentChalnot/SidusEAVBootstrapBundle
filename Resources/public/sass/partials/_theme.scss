@@ -2,6 +2,15 @@
   margin-top: 10px;
 }
 
+.nav.nav-tabs .tab-danger {
+  a {
+    color: $state-danger-text;
+  }
+  &.active a {
+    color: $state-danger-text;
+  }
+}
+
 .input-group {
   &.date {
     width: 160px;
