@@ -20,6 +20,9 @@ class DatePickerType extends AbstractType
         ]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getParent()
     {
         return 'date';

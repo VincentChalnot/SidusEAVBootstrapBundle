@@ -10,11 +10,12 @@ use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Allow selection of family before displaying an autocomplete box
+ */
 class ComboDataSelectorType extends AbstractType
 {
     /** @var FamilyConfigurationHandler */
@@ -26,14 +27,6 @@ class ComboDataSelectorType extends AbstractType
     public function __construct(FamilyConfigurationHandler $familyConfigurationHandler)
     {
         $this->familyConfigurationHandler = $familyConfigurationHandler;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function buildView(FormView $view, FormInterface $form, array $options)
-    {
-
     }
 
     /**
@@ -58,7 +51,7 @@ class ComboDataSelectorType extends AbstractType
                 if ($data instanceof DataInterface) {
                     $selected = $family->getCode() === $data->getFamilyCode();
                 }
-                $form->add('data_' . $family->getCode(), 'sidus_autocomplete_data_selector', [
+                $form->add('data_'.$family->getCode(), 'sidus_autocomplete_data_selector', [
                     'label' => false,
                     'family' => $family,
                     'auto_init' => $selected,
@@ -74,16 +67,18 @@ class ComboDataSelectorType extends AbstractType
                 if ($originalData instanceof DataInterface) {
                     return [
                         'family' => $originalData->getFamily(),
-                        'data_' . $originalData->getFamilyCode() => $originalData,
+                        'data_'.$originalData->getFamilyCode() => $originalData,
                     ];
                 }
+
                 return $originalData;
             },
             function ($submittedData) {
                 $family = $submittedData['family'];
                 if ($family instanceof FamilyInterface) {
-                    return $submittedData['data_' . $family->getCode()];
+                    return $submittedData['data_'.$family->getCode()];
                 }
+
                 return null;
             }
         ));
@@ -91,6 +86,7 @@ class ComboDataSelectorType extends AbstractType
 
     /**
      * @param OptionsResolver $resolver
+     *
      * @throws \Exception
      */
     public function configureOptions(OptionsResolver $resolver)
@@ -111,6 +107,7 @@ class ComboDataSelectorType extends AbstractType
                     $families[$value->getCode()] = $value;
                 }
             }
+
             return $families;
         });
     }

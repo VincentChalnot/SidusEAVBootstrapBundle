@@ -10,6 +10,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class WysiwygType extends AbstractType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         if ($options['tinymce_theme']) {
@@ -31,6 +34,9 @@ class WysiwygType extends AbstractType
         ]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getParent()
     {
         return 'textarea';

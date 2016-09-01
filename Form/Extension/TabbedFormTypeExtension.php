@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Override MopaBootstrapBundle to add the "valid" information on form tabs
+ * Override MopaBootstrapBundle to add the "valid" information on form tabs line 110
  *
  * Extension for Adding Tabs to Form type.
  */

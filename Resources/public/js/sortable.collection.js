@@ -14,9 +14,11 @@ function sortableCollections(el) {
             var pattern = $(this).data('input-pattern');
             var prototypeName = $(this).parent().data('prototype-name');
             var regex = new RegExp(RegExp.escape(pattern).replace(prototypeName, '\\d+'));
-            $(this).find(':input[name]').each(function (idx) {
-                var newName = $(this).attr('name').replace(regex, pattern.replace(prototypeName, idx));
-                $(this).attr('name', newName);
+            $(this).children().each(function (idx) {
+                $(this).find(':input[name]').each(function () {
+                    var newName = $(this).attr('name').replace(regex, pattern.replace(prototypeName, idx));
+                    $(this).attr('name', newName);
+                });
             });
         }
     });
