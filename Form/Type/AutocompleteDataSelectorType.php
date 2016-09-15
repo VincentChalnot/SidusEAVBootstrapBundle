@@ -51,9 +51,13 @@ class AutocompleteDataSelectorType extends AbstractType
     {
         if ($options['auto_init']) {
             if (empty($view->vars['attr']['class'])) {
-                $view->vars['attr']['class'] = 'select2';
+                $view->vars['attr']['class'] = '';
             } else {
-                $view->vars['attr']['class'] .= ' select2';
+                $view->vars['attr']['class'] .= ' ';
+            }
+            $view->vars['attr']['class'] .= 'select2';
+            if (!$options['required']) {
+                $view->vars['attr']['class'] .= ' force-allowclear';
             }
         }
         $view->vars['attr']['data-placeholder'] = $options['placeholder'];
