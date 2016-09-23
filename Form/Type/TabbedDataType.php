@@ -21,7 +21,13 @@ class TabbedDataType extends DataType
     ) {
         $family = $data->getFamily();
         foreach ($family->getAttributes() as $attribute) {
-            if ($attribute->getGroup()) {
+            if (!$attribute->getGroup()) { // First only the attributes with no group
+                $this->addAttribute($form, $attribute, $family);
+            }
+        }
+
+        foreach ($family->getAttributes() as $attribute) {
+            if ($attribute->getGroup()) { // Then only the one with a group
                 $tabName = '__tab_'.$family->getCode().'_'.$attribute->getGroup();
                 if (!$form->has($tabName)) {
                     $tabOptions = [
@@ -35,8 +41,6 @@ class TabbedDataType extends DataType
                     $form->add($tabName, 'tab', $tabOptions);
                 }
                 $this->addAttribute($form->get($tabName), $attribute, $family);
-            } else {
-                $this->addAttribute($form, $attribute, $family);
             }
         }
     }

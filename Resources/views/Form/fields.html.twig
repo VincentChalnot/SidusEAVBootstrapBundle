@@ -110,3 +110,36 @@
         </ul>
     {% endspaceless %}
 {% endblock %}
+
+
+{% block sidus_tabbed_data_widget %}
+    {% spaceless %}
+        {% if form.parent == null %}
+            {% if render_fieldset %}<fieldset>{% endif %}
+            {% if show_legend %}{{ block('form_legend') }}{% endif %}
+        {% endif %}
+
+        {% for child in form %}
+            {% if '__tab_' not in child.vars.name %}
+                {{ form_row(child) }}
+            {% endif %}
+        {% endfor %}
+
+        {% if form.vars.tabbed %}
+        {{ form_tabs(form) }}
+        <div class="tab-content">
+        {% endif %}
+
+        {{ block('form_rows_visible') }}
+
+        {% if form.vars.tabbed %}
+        </div>
+        {% endif %}
+
+        {{ form_rest(form) }}
+
+        {% if form.parent == null %}
+            {% if render_fieldset %}</fieldset>{% endif %}
+        {% endif %}
+    {% endspaceless %}
+{% endblock %}
