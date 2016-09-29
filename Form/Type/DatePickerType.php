@@ -3,6 +3,7 @@
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\OptionsResolver\Exception\AccessException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -25,13 +26,13 @@ class DatePickerType extends AbstractType
      */
     public function getParent()
     {
-        return 'date';
+        return DateType::class;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'sidus_date_picker';
     }

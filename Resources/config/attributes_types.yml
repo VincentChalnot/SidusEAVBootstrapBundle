@@ -1,36 +1,36 @@
 services:
     sidus_eav_model.attribute_type.html:
         class: '%sidus_eav_model.attribute_type.default.class%'
-        arguments: [html, textValue, sidus_wysiwyg]
+        arguments: [html, textValue, 'Sidus\EAVBootstrapBundle\Form\Type\WysiwygType']
         tags:
             - { name: sidus.attribute_type }
 
     sidus_eav_model.attribute_type.date:
         class: '%sidus_eav_model.attribute_type.default.class%'
-        arguments: [date, dateValue, sidus_date_picker]
+        arguments: [date, dateValue, 'Sidus\EAVBootstrapBundle\Form\Type\DatePickerType']
         tags:
             - { name: sidus.attribute_type }
 
     sidus_eav_model.attribute_type.datetime:
         class: '%sidus_eav_model.attribute_type.default.class%'
-        arguments: [datetime, datetimeValue, sidus_datetime_picker]
+        arguments: [datetime, datetimeValue, 'Sidus\EAVBootstrapBundle\Form\Type\DateTimePickerType']
         tags:
             - { name: sidus.attribute_type }
 
     sidus_eav_bootstrap.attribute_type.autocomplete_data:
         class: '%sidus_eav_model.attribute_type.default.class%'
-        arguments: [autocomplete_data, dataValue, sidus_autocomplete_data_selector]
+        arguments: [autocomplete_data, dataValue, 'Sidus\EAVBootstrapBundle\Form\Type\AutocompleteDataSelectorType']
         tags:
             - { name: sidus.attribute_type }
 
     sidus_eav_bootstrap.attribute_type.combo_selector:
         class: '%sidus_eav_model.attribute_type.default.class%'
-        arguments: [combo_selector, dataValue, sidus_combo_data_selector]
+        arguments: [combo_selector, dataValue, 'Sidus\EAVBootstrapBundle\Form\Type\ComboDataSelectorType']
         tags:
             - { name: sidus.attribute_type }
 
     sidus_eav_bootstrap.attribute_type.switch:
         class: '%sidus_eav_model.attribute_type.default.class%'
-        arguments: [switch, boolValue, sidus_switch]
+        arguments: [switch, boolValue, 'Sidus\EAVBootstrapBundle\Form\Type\SwitchType']
         tags:
             - { name: sidus.attribute_type }

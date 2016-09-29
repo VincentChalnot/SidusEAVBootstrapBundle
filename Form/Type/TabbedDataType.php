@@ -2,6 +2,7 @@
 
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
+use Mopa\Bundle\BootstrapBundle\Form\Type\TabType;
 use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Form\Type\DataType;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
@@ -38,7 +39,7 @@ class TabbedDataType extends DataType
                     if ($icon) {
                         $tabOptions['icon'] = $icon;
                     }
-                    $form->add($tabName, 'tab', $tabOptions);
+                    $form->add($tabName, TabType::class, $tabOptions);
                 }
                 $this->addAttribute($form->get($tabName), $attribute, $family);
             }
@@ -59,7 +60,7 @@ class TabbedDataType extends DataType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'sidus_tabbed_data';
     }

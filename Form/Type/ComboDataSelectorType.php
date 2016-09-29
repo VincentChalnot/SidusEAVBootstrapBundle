@@ -4,9 +4,13 @@ namespace Sidus\EAVBootstrapBundle\Form\Type;
 
 use Sidus\EAVModelBundle\Configuration\FamilyConfigurationHandler;
 use Sidus\EAVModelBundle\Entity\DataInterface;
+use Sidus\EAVModelBundle\Form\Type\FamilySelectorType;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Exception\AlreadySubmittedException;
+use Symfony\Component\Form\Exception\LogicException;
+use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -30,12 +34,17 @@ class ComboDataSelectorType extends AbstractType
     }
 
     /**
-     * @inheritDoc
-     * @throws \Exception
+     * @param FormBuilderInterface $builder
+     * @param array                $options
+     *
+     * @throws AlreadySubmittedException
+     * @throws LogicException
+     * @throws UnexpectedTypeException
+     * @throws \InvalidArgumentException
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('family', 'sidus_family_selector', [
+        $builder->add('family', FamilySelectorType::class, [
             'label' => false,
             'families' => $options['families'],
             'empty_value' => 'sidus.family.selector.empty_value',
@@ -45,13 +54,14 @@ class ComboDataSelectorType extends AbstractType
             /** @var DataInterface $data */
             $data = $event->getData();
 
-            /** @var FamilyInterface $family */
-            foreach ($options['families'] as $family) {
+            /** @var FamilyInterface[] $families */
+            $families = $options['families'];
+            foreach ($families as $family) {
                 $selected = false;
                 if ($data instanceof DataInterface) {
                     $selected = $family->getCode() === $data->getFamilyCode();
                 }
-                $form->add('data_'.$family->getCode(), 'sidus_autocomplete_data_selector', [
+                $form->add('data_'.$family->getCode(), AutocompleteDataSelectorType::class, [
                     'label' => false,
                     'family' => $family,
                     'auto_init' => $selected,
@@ -115,7 +125,7 @@ class ComboDataSelectorType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'sidus_combo_data_selector';
     }

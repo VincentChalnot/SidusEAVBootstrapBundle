@@ -3,11 +3,15 @@
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
 use Doctrine\ORM\EntityRepository;
+use Samson\Bundle\AutocompleteBundle\Form\Listener\AutoCompleteTypeListener;
+use Samson\Bundle\AutocompleteBundle\Form\Type\AutoCompleteType;
 use Sidus\EAVModelBundle\Configuration\FamilyConfigurationHandler;
 use Sidus\EAVModelBundle\Exception\MissingFamilyException;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Exception\AccessException;
@@ -131,13 +135,13 @@ class AutocompleteDataSelectorType extends AbstractType
      */
     public function getParent()
     {
-        return 'autocomplete';
+        return AutoCompleteType::class;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'sidus_autocomplete_data_selector';
     }
