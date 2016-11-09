@@ -40,7 +40,10 @@ class TabbedDataType extends DataType
                     }
                     $form->add($tabName, 'tab', $tabOptions);
                 }
-                $this->addAttribute($form->get($tabName), $attribute, $family);
+
+                $this->addAttribute($form->get($tabName), $attribute, $family, $data, $options);
+            } else {
+                $this->addAttribute($form, $attribute, $family, $data, $options);
             }
         }
     }
