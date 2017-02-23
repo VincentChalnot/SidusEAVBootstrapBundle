@@ -16,10 +16,9 @@
             "role": "Developer"
         }
     ],
-    "target-dir": "Sidus/EAVBootstrapBundle",
     "autoload": {
-        "psr-0": {
-            "Sidus\\EAVBootstrapBundle": ""
+        "psr-4": {
+            "Sidus\\EAVBootstrapBundle\\": ""
         }
     },
     "require": {
