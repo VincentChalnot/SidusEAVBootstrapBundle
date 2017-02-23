@@ -1,9 +1,6 @@
-parameters:
-    sidus_eav_bootstrap.twig.extension.class: Sidus\EAVBootstrapBundle\Twig\SidusTwigExtension
-
 services:
     sidus_eav_bootstrap.twig.extension:
-        class: '%sidus_eav_bootstrap.twig.extension.class%'
+        class: Sidus\EAVBootstrapBundle\Twig\SidusTwigExtension
         arguments: ['@sidus_eav_model.family_configuration.handler', '@translator']
         tags:
             - { name: twig.extension }

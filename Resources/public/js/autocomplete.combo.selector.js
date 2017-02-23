@@ -1,4 +1,3 @@
-
 "use strict"; // jshint ;_;
 
 function updateComboSelector(target) {
@@ -10,19 +9,19 @@ function updateComboSelector(target) {
 }
 
 function initComboSelector(target) {
-    $(target).find('.sidus-combo-selector select').each(function(){
+    $(target).find('.sidus-combo-selector select').each(function () {
         var t = $(this);
         if (t.val()) {
             updateComboSelector(t);
         }
-        t.on('change', function(){
+        t.on('change', function () {
             updateComboSelector(t);
         });
     });
 }
 
 !function ($) {
-    $(document).ready(function() {
+    $(document).ready(function () {
         initComboSelector(document);
     });
 }(window.jQuery);

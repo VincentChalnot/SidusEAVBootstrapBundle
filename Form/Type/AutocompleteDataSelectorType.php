@@ -2,6 +2,7 @@
 
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityRepository;
 use Samson\Bundle\AutocompleteBundle\Form\Listener\AutoCompleteTypeListener;
 use Samson\Bundle\AutocompleteBundle\Form\Type\AutoCompleteType;
@@ -9,9 +10,7 @@ use Sidus\EAVModelBundle\Configuration\FamilyConfigurationHandler;
 use Sidus\EAVModelBundle\Exception\MissingFamilyException;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Exception\AccessException;
@@ -33,16 +32,16 @@ class AutocompleteDataSelectorType extends AbstractType
 
     /**
      * @param string                     $dataClass
-     * @param EntityRepository           $repository
+     * @param Registry                   $doctrine
      * @param FamilyConfigurationHandler $familyConfigurationHandler
      */
     public function __construct(
         $dataClass,
-        EntityRepository $repository,
+        Registry $doctrine,
         FamilyConfigurationHandler $familyConfigurationHandler
     ) {
         $this->dataClass = $dataClass;
-        $this->repository = $repository;
+        $this->repository = $doctrine->getRepository($dataClass);
         $this->familyConfigurationHandler = $familyConfigurationHandler;
     }
 
@@ -82,13 +81,11 @@ class AutocompleteDataSelectorType extends AbstractType
         if ($family) {
             $qb
                 ->andWhere('d.family = :family')
-                ->setParameter('family', $family->getCode())
-            ;
+                ->setParameter('family', $family->getCode());
             if ($family->getAttributeAsLabel()) {
                 $qb
                     ->andWhere('v.attributeCode = :attributeCode')
-                    ->setParameter('attributeCode', $family->getAttributeAsLabel()->getCode())
-                ;
+                    ->setParameter('attributeCode', $family->getAttributeAsLabel()->getCode());
             }
         }
         $builder->setAttribute('query-builder', $qb);
@@ -96,6 +93,7 @@ class AutocompleteDataSelectorType extends AbstractType
 
     /**
      * @param OptionsResolver $resolver
+     *
      * @throws AccessException
      * @throws UndefinedOptionsException
      * @throws UnexpectedValueException
@@ -103,31 +101,39 @@ class AutocompleteDataSelectorType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'class' => $this->dataClass,
-            'search_fields' => ['v.stringValue'],
-            'template' => 'SidusEAVModelBundle:Data:data_autocomplete.html.twig',
-            'family' => null,
-            'auto_init' => true,
-        ]);
+        $resolver->setDefaults(
+            [
+                'class' => $this->dataClass,
+                'search_fields' => ['v.stringValue'],
+                'template' => 'SidusEAVModelBundle:Data:data_autocomplete.html.twig',
+                'family' => null,
+                'auto_init' => true,
+            ]
+        );
 
-        $resolver->setNormalizer('family', function (Options $options, $value) {
-            if (null === $value) {
-                return null;
+        $resolver->setNormalizer(
+            'family',
+            function (Options $options, $value) {
+                if (null === $value) {
+                    return null;
+                }
+                if ($value instanceof FamilyInterface) {
+                    return $value;
+                }
+
+                return $this->familyConfigurationHandler->getFamily($value);
             }
-            if ($value instanceof FamilyInterface) {
+        );
+        $resolver->setNormalizer(
+            'disabled',
+            function (Options $options, $value) {
+                if (null === $options['family']) {
+                    return true;
+                }
+
                 return $value;
             }
-
-            return $this->familyConfigurationHandler->getFamily($value);
-        });
-        $resolver->setNormalizer('disabled', function (Options $options, $value) {
-            if (null === $options['family']) {
-                return true;
-            }
-
-            return $value;
-        });
+        );
     }
 
     /**

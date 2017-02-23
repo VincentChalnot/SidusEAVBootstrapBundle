@@ -11,14 +11,17 @@ class DateTimePickerType extends AbstractType
 {
     /**
      * @param OptionsResolver $resolver
+     *
      * @throws AccessException
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'widget' => 'single_text',
-            'datetimepicker' => true,
-        ]);
+        $resolver->setDefaults(
+            [
+                'widget' => 'single_text',
+                'datetimepicker' => true,
+            ]
+        );
     }
 
     /**

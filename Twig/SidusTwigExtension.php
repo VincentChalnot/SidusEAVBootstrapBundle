@@ -51,6 +51,7 @@ class SidusTwigExtension extends Twig_Extension
      * @param array        $parameters
      * @param string|null  $fallback
      * @param bool         $humanizeFallback
+     *
      * @return string
      */
     public function tryTrans($tIds, array $parameters = [], $fallback = null, $humanizeFallback = true)

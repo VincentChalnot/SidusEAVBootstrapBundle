@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class TabbedDataType extends DataType
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function buildValuesForm(
         FormInterface $form,
@@ -47,14 +47,17 @@ class TabbedDataType extends DataType
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefault('attr', [
-            'novalidate' => 'novalidate',
-        ]);
+        $resolver->setDefault(
+            'attr',
+            [
+                'novalidate' => 'novalidate',
+            ]
+        );
     }
 
     /**
@@ -70,6 +73,7 @@ class TabbedDataType extends DataType
      *
      * @param FamilyInterface $family
      * @param string          $groupName
+     *
      * @return string
      * @throws \InvalidArgumentException
      */
@@ -88,6 +92,7 @@ class TabbedDataType extends DataType
      *
      * @param FamilyInterface $family
      * @param string          $groupName
+     *
      * @return string
      * @throws \InvalidArgumentException
      */

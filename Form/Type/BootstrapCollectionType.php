@@ -10,6 +10,9 @@ use Symfony\Component\OptionsResolver\Exception\AccessException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Alternative collection type integrated with bootstrap
+ */
 class BootstrapCollectionType extends AbstractType
 {
     /**
@@ -40,23 +43,26 @@ class BootstrapCollectionType extends AbstractType
 
     /**
      * @param OptionsResolver $resolver
+     *
      * @throws AccessException
      * @throws UndefinedOptionsException
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'add_button_text' => 'sidus.collection.add',
-            'delete_button_text' => 'sidus.collection.delete',
-            'sub_widget_col' => 10,
-            'button_col' => 2,
-            'sortable' => true,
-            'error_bubbling' => false,
-        ]);
+        $resolver->setDefaults(
+            [
+                'add_button_text' => 'sidus.collection.add',
+                'delete_button_text' => 'sidus.collection.delete',
+                'sub_widget_col' => 10,
+                'button_col' => 2,
+                'sortable' => true,
+                'error_bubbling' => false,
+            ]
+        );
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getParent()
     {
@@ -64,7 +70,7 @@ class BootstrapCollectionType extends AbstractType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getBlockPrefix()
     {

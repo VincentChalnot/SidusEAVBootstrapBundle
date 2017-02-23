@@ -31,14 +31,14 @@
 
         var collection = $('#' + selector);
         var list = collection.find('> ul');
-        var count = list.find('> li').size();
+        var count = list.find('> li').length;
         var newWidget = collection.attr('data-prototype');
 
         // Check if an element with this ID already exists.
         // If it does, increase the count by one and try again
         var newName = newWidget.match(/id="(.*?)"/);
         var re = new RegExp(prototypeName, "g");
-        while ($('#' + newName[1].replace(re, count)).size() > 0) {
+        while ($('#' + newName[1].replace(re, count)).length > 0) {
             count++;
         }
         newWidget = newWidget.replace(re, count);

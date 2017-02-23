@@ -1,6 +1,6 @@
 "use strict"; // jshint ;_;
 
-RegExp.escape= function(s) {
+RegExp.escape = function (s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 };
 

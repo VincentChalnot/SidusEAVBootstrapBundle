@@ -1,32 +1,35 @@
 {
-  "name": "sidus/eav-bootstrap-bundle",
-  "description": "Bootstrap implementation and helpers for Sidus/EAVModelBundle",
-  "keywords": [ "eav", "bootstrap" ],
-  "homepage": "https://github.com/VincentChalnot/SidusEAVBootstrapBundle",
-  "type": "library",
-  "license": "GPL-2.0",
-  "authors": [
-    {
-      "name": "Vincent Chalnot",
-      "email": "vincent@sidus.fr",
-      "homepage": "http://chalnot.fr",
-      "role": "Developer"
+    "name": "sidus/eav-bootstrap-bundle",
+    "description": "Bootstrap implementation and helpers for Sidus/EAVModelBundle",
+    "keywords": [
+        "eav",
+        "bootstrap"
+    ],
+    "homepage": "https://github.com/VincentChalnot/SidusEAVBootstrapBundle",
+    "type": "library",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Vincent Chalnot",
+            "email": "vincent@sidus.fr",
+            "homepage": "http://chalnot.fr",
+            "role": "Developer"
+        }
+    ],
+    "target-dir": "Sidus/EAVBootstrapBundle",
+    "autoload": {
+        "psr-0": {
+            "Sidus\\EAVBootstrapBundle": ""
+        }
+    },
+    "require": {
+        "sidus/eav-model-bundle": "dev-v1.2.x-dev",
+        "pinano/select2-bundle": "^4.0",
+        "stfalcon/tinymce-bundle": "^2.0",
+        "mopa/bootstrap-bundle": "^3.0",
+        "twbs/bootstrap-sass": "^3.3.0",
+        "components/jquery": "^3.1",
+        "components/jqueryui": "*",
+        "robloach/component-installer": "^0.2"
     }
-  ],
-  "target-dir": "Sidus/EAVBootstrapBundle",
-  "autoload": {
-    "psr-0": { "Sidus\\EAVBootstrapBundle": "" }
-  },
-  "require": {
-    "sidus/eav-model-bundle": "dev-v1.2.x-dev",
-
-    "pinano/select2-bundle": "^4.0",
-    "stfalcon/tinymce-bundle": "^2.0",
-
-    "mopa/bootstrap-bundle": "^3.0",
-    "twbs/bootstrap-sass": "^3.3.0",
-    "components/jquery": "^3.1",
-    "components/jqueryui": "*",
-    "robloach/component-installer": "^0.2"
-  }
 }

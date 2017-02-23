@@ -23,16 +23,19 @@ class WysiwygType extends AbstractType
 
     /**
      * @param OptionsResolver $resolver
+     *
      * @throws AccessException
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'tinymce_theme' => null,
-            'attr' => [
-                'class' => 'tinymce',
-            ],
-        ]);
+        $resolver->setDefaults(
+            [
+                'tinymce_theme' => null,
+                'attr' => [
+                    'class' => 'tinymce',
+                ],
+            ]
+        );
     }
 
     /**

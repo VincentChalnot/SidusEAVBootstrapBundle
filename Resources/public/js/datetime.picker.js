@@ -2,7 +2,7 @@
 
     "use strict"; // jshint ;_;
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('[data-provider="datepicker"]').datetimepicker({
             autoclose: true,
             format: 'dd/mm/yyyy',
@@ -32,8 +32,8 @@
         });
 
         // Restore value from hidden input
-        $('input[type=hidden]', '.date').each(function(){
-            if($(this).val()) {
+        $('input[type=hidden]', '.date').each(function () {
+            if ($(this).val()) {
                 $(this).parent().datetimepicker('setValue');
             }
         });
