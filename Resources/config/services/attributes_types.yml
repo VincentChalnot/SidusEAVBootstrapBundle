@@ -1,4 +1,5 @@
 services:
+    # Cosmetic types
     sidus_eav_model.attribute_type.html:
         class: '%sidus_eav_model.attribute_type.default.class%'
         arguments:
@@ -26,8 +27,18 @@ services:
         tags:
             - { name: sidus.attribute_type }
 
-    sidus_eav_bootstrap.attribute_type.autocomplete_data:
+    sidus_eav_bootstrap.attribute_type.switch:
         class: '%sidus_eav_model.attribute_type.default.class%'
+        arguments:
+            - switch
+            - boolValue
+            - Sidus\EAVBootstrapBundle\Form\Type\SwitchType
+        tags:
+            - { name: sidus.attribute_type }
+
+    # Improved relations
+    sidus_eav_bootstrap.attribute_type.autocomplete_data:
+        class: '%sidus_eav_model.attribute_type.relation.class%'
         arguments:
             - autocomplete_data
             - dataValue
@@ -36,19 +47,10 @@ services:
             - { name: sidus.attribute_type }
 
     sidus_eav_bootstrap.attribute_type.combo_selector:
-        class: '%sidus_eav_model.attribute_type.default.class%'
+        class: '%sidus_eav_model.attribute_type.relation.class%'
         arguments:
             - combo_selector
             - dataValue
             - Sidus\EAVBootstrapBundle\Form\Type\ComboDataSelectorType
-        tags:
-            - { name: sidus.attribute_type }
-
-    sidus_eav_bootstrap.attribute_type.switch:
-        class: '%sidus_eav_model.attribute_type.default.class%'
-        arguments:
-            - switch
-            - boolValue
-            - Sidus\EAVBootstrapBundle\Form\Type\SwitchType
         tags:
             - { name: sidus.attribute_type }

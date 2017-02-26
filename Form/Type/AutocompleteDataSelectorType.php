@@ -4,13 +4,11 @@ namespace Sidus\EAVBootstrapBundle\Form\Type;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityRepository;
-use Samson\Bundle\AutocompleteBundle\Form\Listener\AutoCompleteTypeListener;
-use Samson\Bundle\AutocompleteBundle\Form\Type\AutoCompleteType;
 use Sidus\EAVModelBundle\Configuration\FamilyConfigurationHandler;
 use Sidus\EAVModelBundle\Exception\MissingFamilyException;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Exception\AccessException;
@@ -63,32 +61,7 @@ class AutocompleteDataSelectorType extends AbstractType
                 $view->vars['attr']['class'] .= ' force-allowclear';
             }
         }
-        $view->vars['attr']['data-placeholder'] = $options['placeholder'];
         $view->vars['family'] = $options['family'];
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $qb = $this->repository->createQueryBuilder('d');
-        $qb->innerJoin('d.values', 'v');
-
-        /** @var FamilyInterface $family */
-        $family = $options['family'];
-        if ($family) {
-            $qb
-                ->andWhere('d.family = :family')
-                ->setParameter('family', $family->getCode());
-            if ($family->getAttributeAsLabel()) {
-                $qb
-                    ->andWhere('v.attributeCode = :attributeCode')
-                    ->setParameter('attributeCode', $family->getAttributeAsLabel()->getCode());
-            }
-        }
-        $builder->setAttribute('query-builder', $qb);
     }
 
     /**
@@ -104,8 +77,6 @@ class AutocompleteDataSelectorType extends AbstractType
         $resolver->setDefaults(
             [
                 'class' => $this->dataClass,
-                'search_fields' => ['v.stringValue'],
-                'template' => 'SidusEAVModelBundle:Data:data_autocomplete.html.twig',
                 'family' => null,
                 'auto_init' => true,
             ]
@@ -141,7 +112,7 @@ class AutocompleteDataSelectorType extends AbstractType
      */
     public function getParent()
     {
-        return AutoCompleteType::class;
+        return TextType::class;
     }
 
     /**
