@@ -47,17 +47,18 @@
         newLi.appendTo(list);
 
         // trigger de l'évènement d'ajout
-        $(document).trigger('collection.item.added', list.find('li').last());
+        $this.closest('[id^=sidus_tabbed_data_]').trigger('collection.item.added', list.find('li').last());
     };
 
     CollectionRemove.prototype.removeField = function (e) {
         var $this = $(this),
-            selector = $this.attr('data-field')
-            ;
+          selector = $this.attr('data-field')
+          ;
 
         e && e.preventDefault();
-
+        var $collection = $this.closest('[id^=sidus_tabbed_data_]');
         var listElement = $this.closest('li').remove();
+        $collection.trigger('collection.item.removed');
     };
 
 
@@ -70,8 +71,8 @@
     $.fn.addField = function (option) {
         return this.each(function () {
             var $this = $(this),
-                data = $this.data('addfield')
-                ;
+              data = $this.data('addfield')
+              ;
             if (!data) {
                 $this.data('addfield', (data = new CollectionAdd(this)));
             }
@@ -84,8 +85,8 @@
     $.fn.removeField = function (option) {
         return this.each(function () {
             var $this = $(this),
-                data = $this.data('removefield')
-                ;
+              data = $this.data('removefield')
+              ;
             if (!data) {
                 $this.data('removefield', (data = new CollectionRemove(this)));
             }
