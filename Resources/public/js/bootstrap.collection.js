@@ -47,7 +47,7 @@
         newLi.appendTo(list);
 
         // trigger de l'évènement d'ajout
-        $(document).trigger('collection.item.added', list.find('li').last());
+        collection.trigger('collection.item.added', list.find('li').last());
     };
 
     CollectionRemove.prototype.removeField = function (e) {
@@ -56,8 +56,9 @@
             ;
 
         e && e.preventDefault();
-
+        var collection = $(selector);
         var listElement = $this.closest('li').remove();
+        collection.trigger('collection.item.removed');
     };
 
 
