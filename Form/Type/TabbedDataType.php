@@ -9,6 +9,9 @@ use Sidus\EAVModelBundle\Model\FamilyInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Same as DataType but with tabs for attribute groups
+ */
 class TabbedDataType extends DataType
 {
     /**
@@ -23,7 +26,7 @@ class TabbedDataType extends DataType
         $family = $data->getFamily();
         foreach ($family->getAttributes() as $attribute) {
             if (!$attribute->getGroup()) { // First only the attributes with no group
-                $this->addAttribute($form, $attribute, $family);
+                $this->addAttribute($form, $attribute, $data, $options);
             }
         }
 
@@ -41,7 +44,7 @@ class TabbedDataType extends DataType
                     }
                     $form->add($tabName, TabType::class, $tabOptions);
                 }
-                $this->addAttribute($form->get($tabName), $attribute, $family);
+                $this->addAttribute($form->get($tabName), $attribute, $data, $options);
             }
         }
     }

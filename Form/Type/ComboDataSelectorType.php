@@ -49,7 +49,7 @@ class ComboDataSelectorType extends AbstractType
             FamilySelectorType::class,
             [
                 'label' => false,
-                'families' => $options['families'],
+                'families' => $options['allowed_families'],
                 'empty_value' => 'sidus.family.selector.empty_value',
             ]
         );
@@ -61,7 +61,7 @@ class ComboDataSelectorType extends AbstractType
                 $data = $event->getData();
 
                 /** @var FamilyInterface[] $families */
-                $families = $options['families'];
+                $families = $options['allowed_families'];
                 foreach ($families as $family) {
                     $selected = false;
                     if ($data instanceof DataInterface) {
@@ -116,11 +116,11 @@ class ComboDataSelectorType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'families' => null,
+                'allowed_families' => null,
             ]
         );
         $resolver->setNormalizer(
-            'families',
+            'allowed_families',
             function (Options $options, $values) {
                 if (null === $values) {
                     $values = $this->familyConfigurationHandler->getFamilies();
