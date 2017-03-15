@@ -119,6 +119,7 @@ class ComboDataSelectorType extends AbstractType
                 'allowed_families' => null,
             ]
         );
+        $resolver->setAllowedTypes('allowed_families', 'array');
         $resolver->setNormalizer(
             'allowed_families',
             function (Options $options, $values) {

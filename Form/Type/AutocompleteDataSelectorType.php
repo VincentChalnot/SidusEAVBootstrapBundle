@@ -61,7 +61,7 @@ class AutocompleteDataSelectorType extends AbstractType
                 $view->vars['attr']['class'] .= ' force-allowclear';
             }
         }
-        $view->vars['family'] = $options['family'];
+        $view->vars['allowed_families'] = $options['allowed_families'];
     }
 
     /**
@@ -77,32 +77,28 @@ class AutocompleteDataSelectorType extends AbstractType
         $resolver->setDefaults(
             [
                 'class' => $this->dataClass,
-                'family' => null,
+                'allowed_families' => null,
                 'auto_init' => true,
             ]
         );
-
+        $resolver->setAllowedTypes('allowed_families', 'array');
         $resolver->setNormalizer(
-            'family',
-            function (Options $options, $value) {
-                if (null === $value) {
-                    return null;
+            'allowed_families',
+            function (Options $options, $values) {
+                if (null === $values) {
+                    $values = $this->familyConfigurationHandler->getFamilies();
                 }
-                if ($value instanceof FamilyInterface) {
-                    return $value;
-                }
-
-                return $this->familyConfigurationHandler->getFamily($value);
-            }
-        );
-        $resolver->setNormalizer(
-            'disabled',
-            function (Options $options, $value) {
-                if (null === $options['family']) {
-                    return true;
+                $families = [];
+                foreach ($values as $value) {
+                    if (!$value instanceof FamilyInterface) {
+                        $value = $this->familyConfigurationHandler->getFamily($value);
+                    }
+                    if ($value->isInstantiable()) {
+                        $families[$value->getCode()] = $value;
+                    }
                 }
 
-                return $value;
+                return $families;
             }
         );
     }
