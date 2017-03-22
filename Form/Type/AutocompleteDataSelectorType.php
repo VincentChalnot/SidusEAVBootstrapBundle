@@ -3,12 +3,15 @@
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityRepository;
 use Sidus\EAVModelBundle\Configuration\FamilyConfigurationHandler;
+use Sidus\EAVModelBundle\Entity\DataInterface;
+use Sidus\EAVModelBundle\Entity\DataRepository;
 use Sidus\EAVModelBundle\Exception\MissingFamilyException;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Exception\AccessException;
@@ -22,7 +25,7 @@ class AutocompleteDataSelectorType extends AbstractType
     /** @var string */
     protected $dataClass;
 
-    /** @var EntityRepository */
+    /** @var DataRepository */
     protected $repository;
 
     /** @var FamilyConfigurationHandler */
@@ -62,6 +65,32 @@ class AutocompleteDataSelectorType extends AbstractType
             }
         }
         $view->vars['allowed_families'] = $options['allowed_families'];
+        $view->vars['eavData'] = $form->getData();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->addModelTransformer(
+            new CallbackTransformer(
+                function (DataInterface $data = null) {
+                    if (null === $data) {
+                        return null;
+                    }
+
+                    return $data->getId();
+                },
+                function ($id) {
+                    if (null === $id) {
+                        return null;
+                    }
+
+                    return $this->repository->find($id);
+                }
+            )
+        );
     }
 
     /**
