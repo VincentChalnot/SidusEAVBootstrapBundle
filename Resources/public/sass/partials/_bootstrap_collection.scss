@@ -1,7 +1,7 @@
 
 .bootstrap-collection {
   padding-left: 0;
-  li {
+  & > li {
     position: relative;
     padding-right: 38px;
     list-style: none;
@@ -22,7 +22,7 @@
     }
   }
   &.sortable-collection {
-    li {
+    & > li {
       padding-left: 25px;
     }
   }
