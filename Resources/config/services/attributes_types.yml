@@ -40,7 +40,7 @@ services:
     sidus_eav_bootstrap.attribute_type.autocomplete_data:
         class: '%sidus_eav_model.attribute_type.relation.class%'
         arguments:
-            - autocomplete_data
+            - autocomplete_data_selector
             - dataValue
             - Sidus\EAVBootstrapBundle\Form\Type\AutocompleteDataSelectorType
         tags:
@@ -49,7 +49,7 @@ services:
     sidus_eav_bootstrap.attribute_type.combo_selector:
         class: '%sidus_eav_model.attribute_type.relation.class%'
         arguments:
-            - combo_selector
+            - combo_data_selector
             - dataValue
             - Sidus\EAVBootstrapBundle\Form\Type\ComboDataSelectorType
         tags:
