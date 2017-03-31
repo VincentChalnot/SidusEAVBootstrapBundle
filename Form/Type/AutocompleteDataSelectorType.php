@@ -3,7 +3,7 @@
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Sidus\EAVModelBundle\Configuration\FamilyConfigurationHandler;
+use Sidus\EAVBootstrapBundle\Controller\AutocompleteApiController;
 use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Entity\DataRepository;
 use Sidus\EAVModelBundle\Exception\MissingFamilyException;
@@ -11,48 +11,61 @@ use Sidus\EAVModelBundle\Form\Type\SimpleDataSelectorType;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\ChoiceList\View\ChoiceView;
+use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Exception\AccessException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\RouterInterface;
 use UnexpectedValueException;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
+/**
+ * Class AutocompleteDataSelectorType
+ *
+ * @package Sidus\EAVBootstrapBundle\Form\Type
+ */
 class AutocompleteDataSelectorType extends AbstractType
 {
-    /** @var string */
-    protected $dataClass;
+    /** @var RouterInterface */
+    protected $router;
 
     /** @var DataRepository */
     protected $repository;
 
-    /** @var FamilyConfigurationHandler */
-    protected $familyConfigurationHandler;
-
     /**
-     * @param string                     $dataClass
-     * @param Registry                   $doctrine
-     * @param FamilyConfigurationHandler $familyConfigurationHandler
+     * @param RouterInterface $router
+     * @param Registry        $doctrine
+     * @param string          $dataClass
      */
-    public function __construct(
-        $dataClass,
-        Registry $doctrine,
-        FamilyConfigurationHandler $familyConfigurationHandler
-    ) {
-        $this->dataClass = $dataClass;
+    public function __construct(RouterInterface $router, Registry $doctrine, $dataClass)
+    {
+        $this->router = $router;
         $this->repository = $doctrine->getRepository($dataClass);
-        $this->familyConfigurationHandler = $familyConfigurationHandler;
     }
 
     /**
      * @param FormView      $view
      * @param FormInterface $form
      * @param array         $options
+     *
+     * @throws \RuntimeException
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        $data = $form->getData();
+        if ($data) { // Set the current data in the choices
+            $value = $form->getViewData();
+            $view->vars['choices'] = [
+                $value => new ChoiceView($data, $value, (string) $data),
+            ];
+        }
+
         if ($options['auto_init']) {
             if (empty($view->vars['attr']['class'])) {
                 $view->vars['attr']['class'] = '';
@@ -61,33 +74,71 @@ class AutocompleteDataSelectorType extends AbstractType
             }
             $view->vars['attr']['class'] .= 'select2';
             if (!$options['required']) {
-                $view->vars['attr']['class'] .= ' force-allowclear';
+                $view->vars['attr']['data-allow-clear'] = 'true';
+                $view->vars['attr']['data-placeholder'] = '';
             }
         }
-        $view->vars['allowed_families'] = $options['allowed_families'];
-        $view->vars['eavData'] = $form->getData();
+
+        /** @var FamilyInterface[] $allowedFamilies */
+        $allowedFamilies = $options['allowed_families'];
+        $familyCodes = [];
+        foreach ($allowedFamilies as $allowedFamily) {
+            $familyCodes[] = $allowedFamily->getCode();
+        }
+        try {
+            $view->vars['attr']['data-query-uri'] = $this->router->generate(
+                'sidus_autocomplete_api_search',
+                [
+                    'familyCodes' => implode(AutocompleteApiController::FAMILY_SEPARATOR, $familyCodes),
+                ]
+            );
+        } catch (ExceptionInterface $e) {
+            throw new \RuntimeException('Unable to generate autocomplete route', 0, $e);
+        }
     }
 
     /**
-     * {@inheritdoc}
+     * @param FormBuilderInterface $builder
+     * @param array                $options
+     *
+     * @throws TransformationFailedException
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->resetModelTransformers();
         $builder->addModelTransformer(
             new CallbackTransformer(
-                function (DataInterface $data = null) {
-                    if (null === $data) {
-                        return null;
-                    }
-
-                    return $data->getId();
+                function ($originalData) {
+                    return $originalData;
                 },
-                function ($id) {
-                    if (null === $id) {
+                function ($submittedData) use ($options) {
+                    if (null === $submittedData || '' === $submittedData) {
                         return null;
                     }
 
-                    return $this->repository->find($id);
+                    $eavEntity = $this->repository->find($submittedData);
+                    if (!$eavEntity instanceof DataInterface) {
+                        throw new TransformationFailedException('Data should be a DataInterface');
+                    }
+                    $this->checkFamily($eavEntity, $options['allowed_families']);
+
+                    return $eavEntity;
+                }
+            )
+        );
+
+        $builder->resetViewTransformers();
+        $builder->addViewTransformer(
+            new CallbackTransformer(
+                function ($originalData) {
+                    if ($originalData instanceof DataInterface) {
+                        return $originalData->getId();
+                    }
+
+                    return $originalData;
+                },
+                function ($submittedData) {
+                    return $submittedData;
                 }
             )
         );
@@ -105,30 +156,9 @@ class AutocompleteDataSelectorType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'class' => $this->dataClass,
-                'allowed_families' => null,
                 'auto_init' => true,
+                'max_results' => 0,
             ]
-        );
-        $resolver->setAllowedTypes('allowed_families', 'array');
-        $resolver->setNormalizer(
-            'allowed_families',
-            function (Options $options, $values) {
-                if (null === $values) {
-                    $values = $this->familyConfigurationHandler->getFamilies();
-                }
-                $families = [];
-                foreach ($values as $value) {
-                    if (!$value instanceof FamilyInterface) {
-                        $value = $this->familyConfigurationHandler->getFamily($value);
-                    }
-                    if ($value->isInstantiable()) {
-                        $families[$value->getCode()] = $value;
-                    }
-                }
-
-                return $families;
-            }
         );
     }
 
@@ -146,5 +176,22 @@ class AutocompleteDataSelectorType extends AbstractType
     public function getBlockPrefix()
     {
         return 'sidus_autocomplete_data_selector';
+    }
+
+    /**
+     * @param DataInterface     $eavEntity
+     * @param FamilyInterface[] $allowedFamilies
+     *
+     * @throws \Symfony\Component\Form\Exception\TransformationFailedException
+     */
+    protected function checkFamily(DataInterface $eavEntity, array $allowedFamilies)
+    {
+        foreach ($allowedFamilies as $family) {
+            if ($eavEntity->getFamilyCode() === $family->getCode()) {
+                return;
+            }
+        }
+
+        throw new TransformationFailedException("Family {$eavEntity->getFamilyCode()} is not allowed");
     }
 }

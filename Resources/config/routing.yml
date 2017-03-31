@@ -1,0 +1,3 @@
+sidus_autocomplete_api_search:
+    path:     /_autocomplete/search/{familyCodes}
+    defaults: { _controller: SidusEAVBootstrapBundle:AutocompleteApi:search }
