@@ -30,10 +30,10 @@ class AutocompleteApiController extends Controller
      */
     public function searchAction(Request $request, $familyCodes)
     {
-        $familyConfigurationHandler = $this->get('sidus_eav_model.family_configuration.handler');
+        $familyRegistry = $this->get('sidus_eav_model.family.registry');
         $families = [];
         foreach (explode(self::FAMILY_SEPARATOR, $familyCodes) as $familyCode) {
-            $families[$familyCode] = $familyConfigurationHandler->getFamily($familyCode);
+            $families[$familyCode] = $familyRegistry->getFamily($familyCode);
         }
 
         $term = rtrim($request->get('term'), '%').'%';

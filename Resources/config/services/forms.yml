@@ -19,6 +19,6 @@ services:
 
     sidus_eav_bootstrap.form.type.combo_data_selector:
         class: Sidus\EAVBootstrapBundle\Form\Type\ComboDataSelectorType
-        arguments: ['@sidus_eav_model.family_configuration.handler']
+        arguments: ['@sidus_eav_model.family.registry']
         tags:
             - { name: form.type }

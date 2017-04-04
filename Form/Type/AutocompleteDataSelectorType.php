@@ -3,7 +3,9 @@
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Common\Persistence\ObjectManager;
 use Sidus\EAVBootstrapBundle\Controller\AutocompleteApiController;
+use Sidus\EAVBootstrapBundle\Form\ChoiceList\EmptyChoiceLoader;
 use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Entity\DataRepository;
 use Sidus\EAVModelBundle\Exception\MissingFamilyException;
@@ -158,6 +160,8 @@ class AutocompleteDataSelectorType extends AbstractType
             [
                 'auto_init' => true,
                 'max_results' => 0,
+                'choices' => [],
+                'choice_loader' => null,
             ]
         );
     }

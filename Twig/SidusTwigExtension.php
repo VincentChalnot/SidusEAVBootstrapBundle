@@ -2,7 +2,7 @@
 
 namespace Sidus\EAVBootstrapBundle\Twig;
 
-use Sidus\EAVModelBundle\Configuration\FamilyConfigurationHandler;
+use Sidus\EAVModelBundle\Registry\FamilyRegistry;
 use Sidus\EAVModelBundle\Translator\TranslatableTrait;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;
@@ -12,16 +12,16 @@ class SidusTwigExtension extends Twig_Extension
 {
     use TranslatableTrait;
 
-    /** @var FamilyConfigurationHandler */
-    protected $familyConfigurationHandler;
+    /** @var FamilyRegistry */
+    protected $familyRegistry;
 
     /**
-     * @param FamilyConfigurationHandler $familyConfigurationHandler
+     * @param FamilyRegistry $familyRegistry
      * @param TranslatorInterface        $translator
      */
-    public function __construct(FamilyConfigurationHandler $familyConfigurationHandler, TranslatorInterface $translator)
+    public function __construct(FamilyRegistry $familyRegistry, TranslatorInterface $translator)
     {
-        $this->familyConfigurationHandler = $familyConfigurationHandler;
+        $this->familyRegistry = $familyRegistry;
         $this->translator = $translator;
     }
 
@@ -39,9 +39,9 @@ class SidusTwigExtension extends Twig_Extension
     public function getFunctions()
     {
         return [
-            new Twig_SimpleFunction('get_families', [$this->familyConfigurationHandler, 'getFamilies']),
-            new Twig_SimpleFunction('get_root_families', [$this->familyConfigurationHandler, 'getRootFamilies']),
-            new Twig_SimpleFunction('get_family', [$this->familyConfigurationHandler, 'getFamily']),
+            new Twig_SimpleFunction('get_families', [$this->familyRegistry, 'getFamilies']),
+            new Twig_SimpleFunction('get_root_families', [$this->familyRegistry, 'getRootFamilies']),
+            new Twig_SimpleFunction('get_family', [$this->familyRegistry, 'getFamily']),
             new Twig_SimpleFunction('tryTrans', [$this, 'tryTrans']),
         ];
     }

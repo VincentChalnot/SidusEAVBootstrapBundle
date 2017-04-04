@@ -2,7 +2,7 @@
 
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
-use Sidus\EAVModelBundle\Configuration\FamilyConfigurationHandler;
+use Sidus\EAVModelBundle\Registry\FamilyRegistry;
 use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Form\Type\FamilySelectorType;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
@@ -22,15 +22,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ComboDataSelectorType extends AbstractType
 {
-    /** @var FamilyConfigurationHandler */
-    protected $familyConfigurationHandler;
+    /** @var FamilyRegistry */
+    protected $familyRegistry;
 
     /**
-     * @param FamilyConfigurationHandler $familyConfigurationHandler
+     * @param FamilyRegistry $familyRegistry
      */
-    public function __construct(FamilyConfigurationHandler $familyConfigurationHandler)
+    public function __construct(FamilyRegistry $familyRegistry)
     {
-        $this->familyConfigurationHandler = $familyConfigurationHandler;
+        $this->familyRegistry = $familyRegistry;
     }
 
     /**
@@ -124,12 +124,12 @@ class ComboDataSelectorType extends AbstractType
             'allowed_families',
             function (Options $options, $values) {
                 if (null === $values) {
-                    $values = $this->familyConfigurationHandler->getFamilies();
+                    $values = $this->familyRegistry->getFamilies();
                 }
                 $families = [];
                 foreach ($values as $value) {
                     if (!$value instanceof FamilyInterface) {
-                        $value = $this->familyConfigurationHandler->getFamily($value);
+                        $value = $this->familyRegistry->getFamily($value);
                     }
                     if ($value->isInstantiable()) {
                         $families[$value->getCode()] = $value;
