@@ -3,9 +3,7 @@
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\Common\Persistence\ObjectManager;
 use Sidus\EAVBootstrapBundle\Controller\AutocompleteApiController;
-use Sidus\EAVBootstrapBundle\Form\ChoiceList\EmptyChoiceLoader;
 use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Entity\DataRepository;
 use Sidus\EAVModelBundle\Exception\MissingFamilyException;
@@ -16,8 +14,6 @@ use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Exception\AccessException;

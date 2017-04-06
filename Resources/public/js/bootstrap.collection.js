@@ -57,7 +57,7 @@
 
         e && e.preventDefault();
         var collection = $(selector);
-        var listElement = $this.closest('li').remove();
+        $this.closest('li').remove();
         collection.trigger('collection.item.removed');
     };
 

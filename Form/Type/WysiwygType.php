@@ -9,6 +9,11 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Exception\AccessException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Enable tinymce on top of textarea widget
+ *
+ * @author Vincent Chalnot <vincent@sidus.fr>
+ */
 class WysiwygType extends AbstractType
 {
     /**

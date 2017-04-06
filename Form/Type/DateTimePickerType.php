@@ -7,6 +7,11 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\OptionsResolver\Exception\AccessException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Enabled a simple bootstrap datepicker on datetime widgets
+ *
+ * @author Vincent Chalnot <vincent@sidus.fr>
+ */
 class DateTimePickerType extends AbstractType
 {
     /**

@@ -5,6 +5,8 @@ services:
     sidus_eav_bootstrap.form.type.tabbed_data:
         class: Sidus\EAVBootstrapBundle\Form\Type\TabbedDataType
         parent: sidus_eav_model.form.type.data
+        calls:
+            - [setTranslator, ['@translator']]
         tags:
             - { name: form.type }
 

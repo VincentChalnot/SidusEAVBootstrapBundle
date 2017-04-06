@@ -3,10 +3,10 @@
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
 use Mopa\Bundle\BootstrapBundle\Form\Type\TabType;
-use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Form\Type\DataType;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
-use Symfony\Component\Form\FormInterface;
+use Sidus\EAVModelBundle\Translator\TranslatableTrait;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -14,26 +14,26 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class TabbedDataType extends DataType
 {
+    use TranslatableTrait;
+
     /**
      * {@inheritdoc}
      */
-    public function buildValuesForm(
-        FormInterface $form,
-        FamilyInterface $family,
-        DataInterface $data = null,
-        array $options = []
-    ) {
-        $family = $data->getFamily();
+    public function buildValuesForm(FormBuilderInterface $builder, array $options = [])
+    {
+        /** @var FamilyInterface $family */
+        $family = $options['family'];
+
         foreach ($family->getAttributes() as $attribute) {
             if (!$attribute->getGroup()) { // First only the attributes with no group
-                $this->addAttribute($form, $attribute, $data, $options);
+                $this->attributeFormBuilder->addAttribute($builder, $attribute, $options);
             }
         }
 
         foreach ($family->getAttributes() as $attribute) {
             if ($attribute->getGroup()) { // Then only the one with a group
                 $tabName = '__tab_'.$family->getCode().'_'.$attribute->getGroup();
-                if (!$form->has($tabName)) {
+                if (!$builder->has($tabName)) {
                     $tabOptions = [
                         'label' => $this->getGroupLabel($family, $attribute->getGroup()),
                         'inherit_data' => true,
@@ -42,9 +42,9 @@ class TabbedDataType extends DataType
                     if ($icon) {
                         $tabOptions['icon'] = $icon;
                     }
-                    $form->add($tabName, TabType::class, $tabOptions);
+                    $builder->add($tabName, TabType::class, $tabOptions);
                 }
-                $this->addAttribute($form->get($tabName), $attribute, $data, $options);
+                $this->attributeFormBuilder->addAttribute($builder->get($tabName), $attribute, $options);
             }
         }
     }
