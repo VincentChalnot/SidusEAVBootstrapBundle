@@ -37,7 +37,7 @@ services:
             - { name: sidus.attribute_type }
 
     # Improved relations
-    sidus_eav_bootstrap.attribute_type.autocomplete_data:
+    sidus_eav_bootstrap.attribute_type.autocomplete_data_selector:
         class: '%sidus_eav_model.attribute_type.relation.class%'
         arguments:
             - autocomplete_data_selector
@@ -46,7 +46,7 @@ services:
         tags:
             - { name: sidus.attribute_type }
 
-    sidus_eav_bootstrap.attribute_type.combo_selector:
+    sidus_eav_bootstrap.attribute_type.combo_data_selector:
         class: '%sidus_eav_model.attribute_type.relation.class%'
         arguments:
             - combo_data_selector
