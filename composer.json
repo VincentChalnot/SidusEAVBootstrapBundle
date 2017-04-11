@@ -24,7 +24,6 @@
     "require": {
         "sidus/eav-model-bundle": "dev-v1.2.x-dev",
         "pinano/select2-bundle": "^4.0",
-        "silverfire/select2-bootstrap3-css": "^1.5",
         "stfalcon/tinymce-bundle": "^2.0",
         "mopa/bootstrap-bundle": "^3.0",
         "twbs/bootstrap-sass": "^3.3.0",
