@@ -3,18 +3,16 @@
   padding-left: 0;
   & > li {
     position: relative;
-    padding-right: 38px;
+    padding-right: $input-height-base + $form-group-margin-bottom / 2;
     list-style: none;
-    margin-bottom: 10px;
-    min-height: 34px;
+    margin-bottom: $form-group-margin-bottom / 2;
+    min-height: $input-height-base;
     .position-handler {
       position: absolute;
       z-index: 10;
       top: 0;
       left: 0;
-      padding: 10px 6px;
       cursor: move;
-      // @include user-select(none);
     }
     & > .form-group {
       margin-left: 0;
@@ -23,7 +21,7 @@
   }
   &.sortable-collection {
     & > li {
-      padding-left: 25px;
+      padding-left: $input-height-base;
     }
   }
 
@@ -36,14 +34,8 @@
     top: 0;
     right: 0;
     z-index: 10;
-    color: white !important;
-    font-weight: bold;
-    font-size: 1.1em;
-    width: 32px;
+    width: $input-height-base;
+    height: $input-height-base;
     text-align: center;
-    padding: 5px 0;
-    background: #e66454 !important;
-    background-image: -webkit-linear-gradient(top, #e76858 0, #e3503e 100%) !important;
-    background-image: linear-gradient(to bottom, #e76858 0, #e3503e 100%) !important;
   }
 }

@@ -1,24 +1,24 @@
-$switch_height: 34px !default; // Default input height in bootstrap
-$switch_width: $switch_height * 2 !default;
-$switch_radius: $border-radius-base !default;
-//$switch_radius: $switch_size / 2; // Round style
-$switch_offset: 2px !default;
-$switch_font_size: $switch_height / 2.2 !default;
-$switch_on_text: 'ON' !default;
-$switch_off_text: 'OFF' !default;
+$switch-height: $input-height-base !default;
+$switch-width: $switch-height * 2 !default;
+$switch-radius: $border-radius-base !default;
+//$switch-radius: $switch-size / 2; // Round style
+$switch-offset: 2px !default;
+$switch-font-size: $switch-height / 2.2 !default;
+$switch-on-text: 'ON' !default;
+$switch-off-text: 'OFF' !default;
 
 .sidus-switch {
   display: inline-block;
   vertical-align: middle;
-  height: $switch_height;
+  height: $switch-height;
   @include user-select(none);
 
   label {
     display: inline-block;
-    border-radius: $switch_radius;
+    border-radius: $switch-radius;
     background: $gray-light;
-    height: $switch_height - 2;
-    width: $switch_width;
+    height: $switch-height - 2;
+    width: $switch-width;
     position: relative;
     cursor: pointer;
     overflow: hidden;
@@ -26,23 +26,23 @@ $switch_off_text: 'OFF' !default;
 
     .slider {
       display: block;
-      height: $switch_height - $switch_offset * 3;
-      width: $switch_height - $switch_offset * 3;
-      border-radius: $switch_radius - 2;
+      height: $switch-height - $switch-offset * 3;
+      width: $switch-height - $switch-offset * 3;
+      border-radius: $switch-radius - 2;
       background: $body-bg;
       position: absolute;
-      top: $switch_offset;
-      right: $switch_offset;
+      top: $switch-offset;
+      right: $switch-offset;
       @include transition(all .2s ease);
 
       &:after {
-        content: $switch_off_text;
+        content: $switch-off-text;
         color: darken($gray-light, 20%);
-        font-size: $switch_font_size;
+        font-size: $switch-font-size;
         display: block;
         position: absolute;
-        top: $switch_height / 10 - $switch_offset / 2;
-        left: -$switch_height;
+        top: $switch-height / 10 - $switch-offset / 2;
+        left: -$switch-height;
       }
     }
   }
@@ -59,12 +59,12 @@ $switch_off_text: 'OFF' !default;
 
       .slider {
         background: $body-bg;
-        right: $switch_width / 2 + $switch_offset * 2; // Additionnal border
+        right: $switch-width / 2 + $switch-offset * 2; // Additionnal border
 
         &:after {
-          content: $switch_on_text;
+          content: $switch-on-text;
           color: $body-bg;
-          left: $switch_height;
+          left: $switch-height;
         }
       }
     }

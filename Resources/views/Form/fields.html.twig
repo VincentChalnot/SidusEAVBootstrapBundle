@@ -34,7 +34,9 @@
 
 {% block sidus_bootstrap_collection_item %}
     {% if not form.vars.disabled and form.vars.sortable %}
-        <i class="fa fa-bars position-handler"></i>
+        <span class="btn btn-link position-handler">
+            <i class="fa fa-bars"></i>
+        </span>
     {% endif %}
     {{ form_widget(field) }}
     {% if prototype.children|length > 1 %}
