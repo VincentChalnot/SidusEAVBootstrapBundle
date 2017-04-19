@@ -36,7 +36,7 @@ class AutocompleteApiController extends Controller
             $families[$familyCode] = $familyRegistry->getFamily($familyCode);
         }
 
-        $term = rtrim($request->get('term'), '%').'%';
+        $term = '%'.trim($request->get('term'), '%').'%';
 
         /** @var DataRepository $repository */
         $repository = $this->getDoctrine()->getRepository($this->getParameter('sidus_eav_model.entity.data.class'));

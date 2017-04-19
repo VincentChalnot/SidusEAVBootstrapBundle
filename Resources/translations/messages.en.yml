@@ -4,4 +4,4 @@ sidus:
         delete: Delete
     family:
         selector:
-            empty_value: Please select a family
+            placeholder: Please select a family

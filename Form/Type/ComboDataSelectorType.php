@@ -50,7 +50,7 @@ class ComboDataSelectorType extends AbstractType
             [
                 'label' => false,
                 'families' => $options['allowed_families'],
-                'empty_value' => 'sidus.family.selector.empty_value',
+                'placeholder' => 'sidus.family.selector.placeholder',
             ]
         );
         $builder->addEventListener(
@@ -72,7 +72,7 @@ class ComboDataSelectorType extends AbstractType
                         AutocompleteDataSelectorType::class,
                         [
                             'label' => false,
-                            'family' => $family,
+                            'allowed_families' => [$family],
                             'auto_init' => $selected,
                             'attr' => [
                                 'data-family' => $family->getCode(),
