@@ -109,6 +109,9 @@
     {% endspaceless %}
 {% endblock %}
 
+{% block help_label %}
+    <span class="help-block">{{ help_label|trans({}, translation_domain)|raw }}</span>
+{% endblock help_label %}
 
 {% block sidus_tabbed_data_widget %}
     {% spaceless %}
