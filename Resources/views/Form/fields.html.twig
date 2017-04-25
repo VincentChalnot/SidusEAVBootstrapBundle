@@ -12,7 +12,7 @@
         {% endif %}
         <div {{ block('widget_container_attributes') }}>
             <ul class="bootstrap-collection {{ sortable ? 'sortable-collection' }}"
-                data-input-pattern="{{ prototype.vars.full_name }}">
+                {% if prototype is defined %}data-input-pattern="{{ prototype.vars.full_name }}"{% endif %}>
                 {% for field in form %}
                     <li>{{ block('sidus_bootstrap_collection_item') }}</li>
                 {% endfor %}
@@ -26,7 +26,8 @@
     {% if not form.vars.disabled and form.vars.allow_add %}
         <a href="#{{ form.vars.id }}" class="btn btn-success"
            data-addfield="collection" data-collection="{{ form.vars.id }}"
-           data-prototype-name="{{ prototype_name }}" title="{{ form.vars.add_button_text|trans }}">
+           {% if prototype is defined %}data-prototype-name="{{ prototype_name }}"{% endif %}
+           title="{{ form.vars.add_button_text|trans }}">
             <i class="fa fa-plus"></i>
         </a>
     {% endif %}
@@ -39,7 +40,7 @@
         </span>
     {% endif %}
     {{ form_widget(field) }}
-    {% if prototype.children|length > 1 %}
+    {% if prototype is defined and prototype.children|length > 1 %}
         <hr class="embed-separator"/>
     {% endif %}
     {% if not form.vars.disabled and form.vars.allow_delete %}
