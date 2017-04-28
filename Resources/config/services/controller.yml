@@ -1,0 +1,8 @@
+services:
+    sidus_eav_bootstrap.controller.autocomplete:
+        class: Sidus\EAVBootstrapBundle\Controller\AutocompleteApiController
+        arguments:
+            - '@sidus_eav_bootstrap.form.helper.compute_label'
+            - '@sidus_eav_model.family.registry'
+            - '@doctrine'
+            - '%sidus_eav_model.entity.data.class%'

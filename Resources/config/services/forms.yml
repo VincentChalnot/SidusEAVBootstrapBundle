@@ -14,6 +14,7 @@ services:
         class: Sidus\EAVBootstrapBundle\Form\Type\AutocompleteDataSelectorType
         arguments:
             - '@router'
+            - '@sidus_eav_bootstrap.form.helper.compute_label'
             - '@doctrine'
             - '%sidus_eav_model.entity.data.class%'
         tags:
@@ -24,3 +25,8 @@ services:
         arguments: ['@sidus_eav_model.family.registry']
         tags:
             - { name: form.type }
+
+    sidus_eav_bootstrap.form.helper.compute_label:
+        class: Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper
+        arguments:
+            - '@property_accessor'

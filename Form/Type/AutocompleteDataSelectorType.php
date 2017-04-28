@@ -3,11 +3,12 @@
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Sidus\EAVBootstrapBundle\Controller\AutocompleteApiController;
+use Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper;
 use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Entity\DataRepository;
 use Sidus\EAVModelBundle\Exception\MissingFamilyException;
 use Sidus\EAVModelBundle\Form\Type\SimpleDataSelectorType;
+use Sidus\EAVModelBundle\Model\AttributeInterface;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -18,6 +19,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Exception\AccessException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use UnexpectedValueException;
@@ -36,14 +38,23 @@ class AutocompleteDataSelectorType extends AbstractType
     /** @var DataRepository */
     protected $repository;
 
+    /** @var ComputeLabelHelper */
+    protected $computeLabelHelper;
+
     /**
-     * @param RouterInterface $router
-     * @param Registry        $doctrine
-     * @param string          $dataClass
+     * @param RouterInterface    $router
+     * @param ComputeLabelHelper $computeLabelHelper
+     * @param Registry           $doctrine
+     * @param string             $dataClass
      */
-    public function __construct(RouterInterface $router, Registry $doctrine, $dataClass)
-    {
+    public function __construct(
+        RouterInterface $router,
+        ComputeLabelHelper $computeLabelHelper,
+        Registry $doctrine,
+        $dataClass
+    ) {
         $this->router = $router;
+        $this->computeLabelHelper = $computeLabelHelper;
         $this->repository = $doctrine->getRepository($dataClass);
     }
 
@@ -57,10 +68,11 @@ class AutocompleteDataSelectorType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $data = $form->getData();
-        if ($data) { // Set the current data in the choices
+        if ($data instanceof DataInterface) { // Set the current data in the choices
             $value = $form->getViewData();
+            $label = $this->computeLabelHelper->computeLabel($data, $value, $options);
             $view->vars['choices'] = [
-                $value => new ChoiceView($data, $value, (string) $data),
+                $value => new ChoiceView($data, $value, $label),
             ];
         }
 
@@ -77,22 +89,7 @@ class AutocompleteDataSelectorType extends AbstractType
             }
         }
 
-        /** @var FamilyInterface[] $allowedFamilies */
-        $allowedFamilies = $options['allowed_families'];
-        $familyCodes = [];
-        foreach ($allowedFamilies as $allowedFamily) {
-            $familyCodes[] = $allowedFamily->getCode();
-        }
-        try {
-            $view->vars['attr']['data-query-uri'] = $this->router->generate(
-                'sidus_autocomplete_api_search',
-                [
-                    'familyCodes' => implode(AutocompleteApiController::FAMILY_SEPARATOR, $familyCodes),
-                ]
-            );
-        } catch (ExceptionInterface $e) {
-            throw new \RuntimeException('Unable to generate autocomplete route', 0, $e);
-        }
+        $view->vars['attr']['data-query-uri'] = $options['query_uri'];
     }
 
     /**
@@ -149,6 +146,7 @@ class AutocompleteDataSelectorType extends AbstractType
      * @throws UndefinedOptionsException
      * @throws UnexpectedValueException
      * @throws MissingFamilyException
+     * @throws \RuntimeException
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -158,7 +156,38 @@ class AutocompleteDataSelectorType extends AbstractType
                 'max_results' => 0,
                 'choices' => [],
                 'choice_loader' => null,
+                'query_uri' => null,
             ]
+        );
+
+        $resolver->setNormalizer(
+            'query_uri',
+            function (Options $options, $value) {
+                if (null !== $value) {
+                    return $value;
+                }
+                /** @var AttributeInterface $attribute */
+                $attribute = $options['attribute'];
+                if (!$attribute) {
+                    throw new UnexpectedValueException('Unable to generate API endpoint without an attribute option');
+                }
+                $family = $attribute->getFamily();
+                if (!$family) {
+                    throw new UnexpectedValueException(
+                        'Unable to generate API endpoint without an attribute option with a family'
+                    );
+                }
+                try {
+                    return $this->router->generate(
+                        'sidus_autocomplete_api_search',
+                        [
+                            'attributePath' => $family->getCode().'.'.$attribute->getCode(),
+                        ]
+                    );
+                } catch (ExceptionInterface $e) {
+                    throw new \RuntimeException('Unable to generate autocomplete route', 0, $e);
+                }
+            }
         );
     }
 

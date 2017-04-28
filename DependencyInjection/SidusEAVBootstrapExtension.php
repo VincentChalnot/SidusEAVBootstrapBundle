@@ -22,6 +22,7 @@ class SidusEAVBootstrapExtension extends Extension
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/services'));
         $loader->load('attributes_types.yml');
+        $loader->load('controller.yml');
         $loader->load('forms.yml');
     }
 }
