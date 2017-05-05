@@ -43,11 +43,11 @@
         }
         newWidget = newWidget.replace(re, count);
         newWidget = newWidget.replace(/__id__/g, newName[1].replace(re, count));
-        var newLi = $('<li></li>').html(newWidget);
-        newLi.appendTo(list);
+        var $newLi = $('<li></li>').html(newWidget);
+        $newLi.appendTo(list);
 
         // trigger de l'évènement d'ajout
-        collection.trigger('collection.item.added', list.find('li').last());
+        collection.trigger('collection.item.added', $newLi);
     };
 
     CollectionRemove.prototype.removeField = function (e) {
@@ -56,9 +56,10 @@
             ;
 
         e && e.preventDefault();
-        var collection = $(selector);
-        $this.closest('li').remove();
-        collection.trigger('collection.item.removed');
+        var $collection = $(selector);
+        var $removedLi = $this.closest('li');
+        $removedLi.remove();
+        $collection.trigger('collection.item.removed', $removedLi);
     };
 
 
