@@ -20,8 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AutocompleteApiController
 {
-    const FAMILY_SEPARATOR = '|';
-
     /** @var FamilyRegistry */
     protected $familyRegistry;
 
