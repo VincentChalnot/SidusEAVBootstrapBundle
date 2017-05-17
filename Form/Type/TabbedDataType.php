@@ -17,6 +17,8 @@ class TabbedDataType extends DataType
     use TranslatableTrait;
 
     /**
+     * @todo Move this logic in a "group" attribute form builder ?
+     *
      * {@inheritdoc}
      */
     public function buildValuesForm(FormBuilderInterface $builder, array $options = [])
@@ -24,14 +26,26 @@ class TabbedDataType extends DataType
         /** @var FamilyInterface $family */
         $family = $options['family'];
 
-        foreach ($family->getAttributes() as $attribute) {
-            if (!$attribute->getGroup()) { // First only the attributes with no group
-                $this->attributeFormBuilder->addAttribute($builder, $attribute, $options);
+        $attributes = $family->getAttributes();
+        if ($options['attributes_config']) {
+            $attributes = [];
+            foreach (array_keys($options['attributes_config']) as $attributeCode) {
+                $attributes[] = $family->getAttribute($attributeCode);
             }
         }
 
-        foreach ($family->getAttributes() as $attribute) {
-            if ($attribute->getGroup()) { // Then only the one with a group
+        foreach ($attributes as $attribute) {
+            if (!$attribute->getGroup()) { // First only the attributes with no group
+                $this->attributeFormBuilder->addAttribute(
+                    $builder,
+                    $attribute,
+                    $this->resolveAttributeConfig($attribute, $options)
+                );
+            }
+        }
+
+        foreach ($attributes as $attribute) {
+            if ($attribute->getGroup()) { // Then only the attributes with a group
                 $tabName = '__tab_'.$family->getCode().'_'.$attribute->getGroup();
                 if (!$builder->has($tabName)) {
                     $tabOptions = [
@@ -44,7 +58,11 @@ class TabbedDataType extends DataType
                     }
                     $builder->add($tabName, TabType::class, $tabOptions);
                 }
-                $this->attributeFormBuilder->addAttribute($builder->get($tabName), $attribute, $options);
+                $this->attributeFormBuilder->addAttribute(
+                    $builder->get($tabName),
+                    $attribute,
+                    $this->resolveAttributeConfig($attribute, $options)
+                );
             }
         }
     }
