@@ -63,12 +63,7 @@ class AutocompleteApiController
         $results = [];
         /** @var DataInterface $data */
         foreach ($pager as $data) {
-            // This is not perfect as it does not uses the OptionResolver of the form type to resolve the 'choice_label'
-            $label = $this->computeLabelHelper->computeLabel($data, $data->getId(), $attribute->getFormOptions());
-            $results[] = [
-                'id' => $data->getId(),
-                'text' => $label,
-            ];
+            $results[] = $this->parseResult($data, $attribute);
         }
 
         $headers = [
@@ -145,5 +140,24 @@ class AutocompleteApiController
         }
 
         return $pager;
+    }
+
+    /**
+     * @param DataInterface      $data
+     * @param AttributeInterface $attribute
+     *
+     * @throws \UnexpectedValueException
+     *
+     * @return array
+     */
+    protected function parseResult(DataInterface $data, AttributeInterface $attribute)
+    {
+        // This is not perfect as it does not uses the OptionResolver of the form type to resolve the 'choice_label'
+        $label = $this->computeLabelHelper->computeLabel($data, $data->getId(), $attribute->getFormOptions());
+
+        return [
+            'id' => $data->getId(),
+            'text' => $label,
+        ];
     }
 }
