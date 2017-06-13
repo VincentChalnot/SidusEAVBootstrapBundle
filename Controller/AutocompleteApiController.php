@@ -11,6 +11,7 @@ use Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper;
 use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Entity\DataRepository;
 use Sidus\EAVModelBundle\Model\AttributeInterface;
+use Sidus\EAVModelBundle\Model\FamilyInterface;
 use Sidus\EAVModelBundle\Registry\FamilyRegistry;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,12 +55,43 @@ class AutocompleteApiController
      *
      * @return JsonResponse
      */
-    public function searchAction(Request $request, $attributePath)
+    public function attributeSearchAction(Request $request, $attributePath)
     {
         $attribute = $this->getAttribute($attributePath);
-        $qb = $this->getQueryBuilder($attribute, $request);
+        $qb = $this->getQueryBuilderByAttribute($request, $attribute);
         $pager = $this->createPager($qb, $request);
 
+
+        return $this->renderResponse($pager, $attribute);
+    }
+
+    /**
+     * @param Request         $request
+     * @param FamilyInterface $family
+     *
+     * @throws \Exception
+     *
+     * @return JsonResponse
+     */
+    public function familySearchAction(Request $request, FamilyInterface $family)
+    {
+        $qb = $this->getQueryBuilderByFamily($request, $family);
+        $pager = $this->createPager($qb, $request);
+
+
+        return $this->renderResponse($pager);
+    }
+
+    /**
+     * @param Pagerfanta              $pager
+     * @param AttributeInterface|null $attribute
+     *
+     * @throws \UnexpectedValueException
+     *
+     * @return JsonResponse
+     */
+    protected function renderResponse(Pagerfanta $pager, AttributeInterface $attribute = null)
+    {
         $results = [];
         /** @var DataInterface $data */
         foreach ($pager as $data) {
@@ -99,8 +131,8 @@ class AutocompleteApiController
     }
 
     /**
-     * @param AttributeInterface $attribute
      * @param Request            $request
+     * @param AttributeInterface $attribute
      *
      * @throws \UnexpectedValueException
      * @throws \LogicException
@@ -108,7 +140,7 @@ class AutocompleteApiController
      *
      * @return QueryBuilder
      */
-    protected function getQueryBuilder(AttributeInterface $attribute, Request $request)
+    protected function getQueryBuilderByAttribute(Request $request, AttributeInterface $attribute)
     {
         $term = '%'.trim($request->get('term'), '%').'%';
 
@@ -120,6 +152,23 @@ class AutocompleteApiController
         }
 
         return $this->repository->getQbForFamiliesAndLabel($families, $term);
+    }
+
+    /**
+     * @param Request         $request
+     * @param FamilyInterface $family
+     *
+     * @throws \UnexpectedValueException
+     * @throws \LogicException
+     * @throws \Sidus\EAVModelBundle\Exception\MissingFamilyException
+     *
+     * @return QueryBuilder
+     */
+    protected function getQueryBuilderByFamily(Request $request, FamilyInterface $family)
+    {
+        $term = '%'.trim($request->get('term'), '%').'%';
+
+        return $this->repository->getQbForFamiliesAndLabel([$family], $term);
     }
 
     /**
@@ -150,10 +199,14 @@ class AutocompleteApiController
      *
      * @return array
      */
-    protected function parseResult(DataInterface $data, AttributeInterface $attribute)
+    protected function parseResult(DataInterface $data, AttributeInterface $attribute = null)
     {
-        // This is not perfect as it does not uses the OptionResolver of the form type to resolve the 'choice_label'
-        $label = $this->computeLabelHelper->computeLabel($data, $data->getId(), $attribute->getFormOptions());
+        if ($attribute) {
+            // This is not perfect as it does not uses the OptionResolver of the form type to resolve the 'choice_label'
+            $label = $this->computeLabelHelper->computeLabel($data, $data->getId(), $attribute->getFormOptions());
+        } else {
+            $label = $data->getLabel();
+        }
 
         return [
             'id' => $data->getId(),

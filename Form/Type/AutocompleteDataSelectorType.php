@@ -169,7 +169,25 @@ class AutocompleteDataSelectorType extends AbstractType
                 /** @var AttributeInterface $attribute */
                 $attribute = $options['attribute'];
                 if (!$attribute) {
-                    throw new UnexpectedValueException('Unable to generate API endpoint without an attribute option');
+                    $allowedFamilies = $options['allowed_families'];
+                    if (1 === count($allowedFamilies)) {
+                        try {
+                            /** @var FamilyInterface $family */
+                            $family = reset($allowedFamilies);
+                            return $this->router->generate(
+                                'sidus_autocomplete_api_family_search',
+                                [
+                                    'familyCode' => $family->getCode(),
+                                ]
+                            );
+                        } catch (ExceptionInterface $e) {
+                            throw new \RuntimeException('Unable to generate autocomplete route', 0, $e);
+                        }
+                    }
+
+                    throw new UnexpectedValueException(
+                        'Unable to generate API endpoint without an attribute option or a single allowed family'
+                    );
                 }
                 $family = $attribute->getFamily();
                 if (!$family) {
@@ -179,7 +197,7 @@ class AutocompleteDataSelectorType extends AbstractType
                 }
                 try {
                     return $this->router->generate(
-                        'sidus_autocomplete_api_search',
+                        'sidus_autocomplete_api_attribute_search',
                         [
                             'attributePath' => $family->getCode().'.'.$attribute->getCode(),
                         ]

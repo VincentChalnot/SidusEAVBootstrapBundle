@@ -16,6 +16,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Allow selection of family before displaying an autocomplete box
@@ -25,12 +26,17 @@ class ComboDataSelectorType extends AbstractType
     /** @var FamilyRegistry */
     protected $familyRegistry;
 
+    /** @var RouterInterface */
+    protected $router;
+
     /**
-     * @param FamilyRegistry $familyRegistry
+     * @param FamilyRegistry  $familyRegistry
+     * @param RouterInterface $router
      */
-    public function __construct(FamilyRegistry $familyRegistry)
+    public function __construct(FamilyRegistry $familyRegistry, RouterInterface $router)
     {
         $this->familyRegistry = $familyRegistry;
+        $this->router = $router;
     }
 
     /**
@@ -76,6 +82,7 @@ class ComboDataSelectorType extends AbstractType
                             'auto_init' => $selected,
                             'attr' => [
                                 'data-family' => $family->getCode(),
+                                'style' => 'display:none',
                             ],
                         ]
                     );
@@ -119,7 +126,7 @@ class ComboDataSelectorType extends AbstractType
                 'allowed_families' => null,
             ]
         );
-        $resolver->setAllowedTypes('allowed_families', 'array');
+        $resolver->setAllowedTypes('allowed_families', ['NULL', 'array']);
         $resolver->setNormalizer(
             'allowed_families',
             function (Options $options, $values) {

@@ -1,3 +1,7 @@
-sidus_autocomplete_api_search:
-    path:     /_autocomplete/search/{attributePath}
-    defaults: { _controller: sidus_eav_bootstrap.controller.autocomplete:searchAction }
+sidus_autocomplete_api_attribute_search:
+    path:     /_autocomplete/search/attribute/{attributePath}
+    defaults: { _controller: sidus_eav_bootstrap.controller.autocomplete:attributeSearchAction }
+
+sidus_autocomplete_api_family_search:
+    path:     /_autocomplete/search/family/{familyCode}
+    defaults: { _controller: sidus_eav_bootstrap.controller.autocomplete:familySearchAction }

@@ -1,27 +1,26 @@
 "use strict"; // jshint ;_;
 
-function updateComboSelector(target) {
-    var widget = target.parents('.sidus-combo-selector').first();
-    widget.find('.select2').removeClass('select2').select2('destroy');
-    widget.find('input[data-family="' + target.val() + '"]')
-        .addClass('select2')
-        .samsonSelect2();
+function updateComboSelector($, $select) {
+    var $widget = $select.parents('.sidus-combo-selector').first();
+    var $input = $widget.find(':input[data-family="' + $select.val() + '"]');
+    $input.siblings().hide();
+    initSelect2($, $input.show().addClass('select2'));
 }
 
-function initComboSelector(target) {
+function initComboSelector($, target) {
     $(target).find('.sidus-combo-selector select').each(function () {
-        var t = $(this);
-        if (t.val()) {
-            updateComboSelector(t);
+        var $select = $(this);
+        if ($select.val()) {
+            updateComboSelector($, $select);
         }
-        t.on('change', function () {
-            updateComboSelector(t);
+        $select.on('change', function () {
+            updateComboSelector($, $select);
         });
     });
 }
 
 !function ($) {
     $(document).ready(function () {
-        initComboSelector(document);
+        initComboSelector($, document);
     });
 }(window.jQuery);
