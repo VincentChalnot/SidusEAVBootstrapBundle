@@ -24,7 +24,7 @@ services:
         class: Sidus\EAVBootstrapBundle\Form\Type\ComboDataSelectorType
         arguments:
             - '@sidus_eav_model.family.registry'
-            - '@api_platform.router'
+            - '@router'
         tags:
             - { name: form.type }
 
