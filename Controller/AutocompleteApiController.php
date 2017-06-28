@@ -144,6 +144,12 @@ class AutocompleteApiController
     {
         $term = '%'.trim($request->get('term'), '%').'%';
 
+        if (!$attribute->getType()->isRelation() && !$attribute->getType()->isEmbedded()) {
+            $eavQb = $this->repository->createFamilyQueryBuilder($attribute->getFamily());
+
+            return $eavQb->apply($eavQb->attribute($attribute)->like($term));
+        }
+
         /** @var array $familyCodes */
         $familyCodes = $attribute->getOption('allowed_families', []);
         $families = [];
@@ -202,8 +208,12 @@ class AutocompleteApiController
     protected function parseResult(DataInterface $data, AttributeInterface $attribute = null)
     {
         if ($attribute) {
-            // This is not perfect as it does not uses the OptionResolver of the form type to resolve the 'choice_label'
-            $label = $this->computeLabelHelper->computeLabel($data, $data->getId(), $attribute->getFormOptions());
+            if ($attribute->getType()->isRelation() || $attribute->getType()->isEmbedded()) {
+                // This is not perfect as it does not uses the OptionResolver of the form type to resolve the 'choice_label'
+                $label = $this->computeLabelHelper->computeLabel($data, $data->getId(), $attribute->getFormOptions());
+            } else {
+                $label = $data->get($attribute->getCode());
+            }
         } else {
             $label = $data->getLabel();
         }
