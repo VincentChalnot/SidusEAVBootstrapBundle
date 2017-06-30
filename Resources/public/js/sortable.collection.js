@@ -14,6 +14,7 @@ function sortableCollections(el) {
         containment: "parent",
         handle: '.position-handler',
         items: "> li",
+        opacity: 0.5,
         update: function () {
             var pattern = $(this).data('input-pattern');
             var prototypeName = $(this).parent().data('prototype-name');
