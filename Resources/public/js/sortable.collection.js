@@ -11,7 +11,6 @@ function sortableCollections(el) {
     /* Initialize bootstrap collection sortable */
     $(el).find('.bootstrap-collection.sortable-collection').sortable({
         axis: "y",
-        containment: "parent",
         handle: '.position-handler',
         items: "> li",
         opacity: 0.5,

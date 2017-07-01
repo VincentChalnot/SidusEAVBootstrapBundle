@@ -38,11 +38,13 @@
         // If it does, increase the count by one and try again
         var newName = newWidget.match(/id="(.*?)"/);
         var re = new RegExp(prototypeName, "g");
-        while ($('#' + newName[1].replace(re, count)).length > 0) {
-            count++;
+        if (newName) {
+            while ($('#' + newName[1].replace(re, count)).length > 0) {
+                count++;
+            }
+            newWidget = newWidget.replace(re, count);
+            newWidget = newWidget.replace(/__id__/g, newName[1].replace(re, count));
         }
-        newWidget = newWidget.replace(re, count);
-        newWidget = newWidget.replace(/__id__/g, newName[1].replace(re, count));
         var $newLi = $('<li></li>').html(newWidget);
         $newLi.appendTo(list);
 
