@@ -10,6 +10,10 @@ RegExp.escape = function (s) {
 function sortableCollections(el) {
     /* Initialize bootstrap collection sortable */
     $(el).find('.bootstrap-collection.sortable-collection').sortable({
+        axis: "y",
+        handle: '.position-handler',
+        items: "> li",
+        opacity: 0.5,
         update: function () {
             var pattern = $(this).data('input-pattern');
             var prototypeName = $(this).parent().data('prototype-name');

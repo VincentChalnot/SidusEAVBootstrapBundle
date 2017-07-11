@@ -54,9 +54,11 @@ $switch-off-text: 'OFF' !default;
     left: 20px;
     top: 5px;
 
-    &:checked + label {
+    &:not([disabled]):checked + label {
       background: $btn-primary-bg;
+    }
 
+    &:checked + label {
       .slider {
         background: $body-bg;
         right: $switch-width / 2 + $switch-offset * 2; // Additionnal border
