@@ -58,7 +58,7 @@
             ;
 
         e && e.preventDefault();
-        var $collection = $(selector);
+        var $collection = $('#'+selector);
         var $removedLi = $this.closest('li');
         $removedLi.remove();
         $collection.trigger('collection.item.removed', $removedLi);
