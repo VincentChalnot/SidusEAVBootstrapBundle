@@ -77,7 +77,7 @@ class AutocompleteApiController
         $qb = $this->getQueryBuilderByFamily($request, $family);
         $pager = $this->createPager($qb, $request);
 
-        return $this->renderResponse($pager);
+        return $this->renderResponse($pager, $family->getAttributeAsLabel());
     }
 
     /**
