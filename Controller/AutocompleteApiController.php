@@ -61,7 +61,6 @@ class AutocompleteApiController
         $qb = $this->getQueryBuilderByAttribute($request, $attribute);
         $pager = $this->createPager($qb, $request);
 
-
         return $this->renderResponse($pager, $attribute);
     }
 
@@ -77,7 +76,6 @@ class AutocompleteApiController
     {
         $qb = $this->getQueryBuilderByFamily($request, $family);
         $pager = $this->createPager($qb, $request);
-
 
         return $this->renderResponse($pager);
     }
@@ -215,7 +213,7 @@ class AutocompleteApiController
                 $label = $data->get($attribute->getCode());
             }
         } else {
-            $label = $data->getLabel();
+            $label = (string) $data;
         }
 
         return [

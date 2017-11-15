@@ -2,6 +2,7 @@
 
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
+use Sidus\EAVModelBundle\Model\AttributeInterface;
 use Sidus\EAVModelBundle\Registry\FamilyRegistry;
 use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Form\Type\FamilySelectorType;
@@ -123,15 +124,25 @@ class ComboDataSelectorType extends AbstractType
     {
         $resolver->setDefaults(
             [
+                'attribute' => null,
                 'allowed_families' => null,
             ]
         );
-        $resolver->setAllowedTypes('allowed_families', ['NULL', 'array']);
+        $resolver->setAllowedTypes('attribute', [AttributeInterface::class, 'NULL']);
+        $resolver->setAllowedTypes('allowed_families', ['array', 'NULL']);
         $resolver->setNormalizer(
             'allowed_families',
             function (Options $options, $values) {
                 if (null === $values) {
-                    $values = $this->familyRegistry->getFamilies();
+                    /** @var AttributeInterface $attribute */
+                    $attribute = $options['attribute'];
+                    if ($attribute) {
+                        /** @var array $values */
+                        $values = $attribute->getOption('allowed_families');
+                    }
+                    if (!$values) {
+                        $values = $this->familyRegistry->getFamilies();
+                    }
                 }
                 $families = [];
                 foreach ($values as $value) {
