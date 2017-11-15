@@ -213,7 +213,7 @@ class AutocompleteApiController
                 $label = $data->get($attribute->getCode());
             }
         } else {
-            $label = $data->getLabel();
+            $label = (string) $data;
         }
 
         return [
