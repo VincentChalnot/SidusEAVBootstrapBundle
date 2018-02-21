@@ -10,6 +10,7 @@ use PagerFanta\Exception\NotValidCurrentPageException;
 use Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper;
 use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Entity\DataRepository;
+use Sidus\EAVModelBundle\Manager\DataManager;
 use Sidus\EAVModelBundle\Model\AttributeInterface;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
 use Sidus\EAVModelBundle\Registry\FamilyRegistry;
@@ -21,11 +22,14 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AutocompleteApiController
 {
+    /** @var ComputeLabelHelper */
+    protected $computeLabelHelper;
+
     /** @var FamilyRegistry */
     protected $familyRegistry;
 
-    /** @var ComputeLabelHelper */
-    protected $computeLabelHelper;
+    /** @var DataManager */
+    protected $dataManager;
 
     /** @var DataRepository */
     protected $repository;
@@ -33,17 +37,20 @@ class AutocompleteApiController
     /**
      * @param ComputeLabelHelper $computeLabelHelper
      * @param FamilyRegistry     $familyRegistry
+     * @param DataManager        $dataManager
      * @param Registry           $doctrine
      * @param string             $dataClass
      */
     public function __construct(
         ComputeLabelHelper $computeLabelHelper,
         FamilyRegistry $familyRegistry,
+        DataManager $dataManager,
         Registry $doctrine,
         $dataClass
     ) {
         $this->computeLabelHelper = $computeLabelHelper;
         $this->familyRegistry = $familyRegistry;
+        $this->dataManager = $dataManager;
         $this->repository = $doctrine->getRepository($dataClass);
     }
 
@@ -155,7 +162,7 @@ class AutocompleteApiController
             $families[] = $this->familyRegistry->getFamily($familyCode);
         }
 
-        return $this->repository->getQbForFamiliesAndLabel($families, $term);
+        return $this->dataManager->getQbForFamiliesAndLabel($families, $term);
     }
 
     /**
@@ -172,7 +179,7 @@ class AutocompleteApiController
     {
         $term = '%'.trim($request->get('term'), '%').'%';
 
-        return $this->repository->getQbForFamiliesAndLabel([$family], $term);
+        return $this->dataManager->getQbForFamiliesAndLabel([$family], $term);
     }
 
     /**
