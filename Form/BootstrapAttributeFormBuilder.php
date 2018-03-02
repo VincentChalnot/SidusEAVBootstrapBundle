@@ -35,7 +35,7 @@ class BootstrapAttributeFormBuilder extends AttributeFormBuilder
         }
 
         $fieldsetOptions = [
-            'label' => $this->getGroupLabel($attribute, $groupPath, $level),
+            'label' => $this->getGroupLabel($attribute->getFamily(), $groupPath, $level),
             'inherit_data' => true,
             'show_child_legend' => true,
             'horizontal_input_wrapper_class' => '',
