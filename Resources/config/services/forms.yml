@@ -5,8 +5,8 @@ services:
     sidus_eav_bootstrap.form.type.tabbed_data:
         class: Sidus\EAVBootstrapBundle\Form\Type\TabbedDataType
         parent: sidus_eav_model.form.type.data
-        calls:
-            - [setTranslator, ['@translator']]
+        arguments:
+            index_0: '@sidus_eav_bootstrap.form.attribute_builder.tabbed'
         tags:
             - { name: form.type }
 
@@ -32,3 +32,15 @@ services:
         class: Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper
         arguments:
             - '@property_accessor'
+
+    sidus_eav_bootstrap.form.attribute_builder.tabbed:
+        class: Sidus\EAVBootstrapBundle\Form\TabbedAttributeFormBuilder
+        parent: sidus_eav_model.form.attribute_builder
+
+    # Overrides base attribute builder
+    sidus_eav_model.form.attribute_builder:
+        class: Sidus\EAVBootstrapBundle\Form\BootstrapAttributeFormBuilder
+        arguments:
+            - '%sidus_eav_model.form.collection_type%'
+        calls:
+            - [setTranslator, ['@translator']]
