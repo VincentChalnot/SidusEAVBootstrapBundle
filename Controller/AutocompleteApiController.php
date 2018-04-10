@@ -4,15 +4,16 @@ namespace Sidus\EAVBootstrapBundle\Controller;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\QueryBuilder;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use PagerFanta\Exception\NotValidCurrentPageException;
 use Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper;
+use Sidus\EAVModelBundle\Doctrine\DataLoaderInterface;
 use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Entity\DataRepository;
 use Sidus\EAVModelBundle\Manager\DataManager;
 use Sidus\EAVModelBundle\Model\AttributeInterface;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
+use Sidus\EAVModelBundle\Pager\Adapter\EAVAdapter;
 use Sidus\EAVModelBundle\Registry\FamilyRegistry;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,24 +35,30 @@ class AutocompleteApiController
     /** @var DataRepository */
     protected $repository;
 
+    /** @var DataLoaderInterface */
+    protected $dataLoader;
+
     /**
-     * @param ComputeLabelHelper $computeLabelHelper
-     * @param FamilyRegistry     $familyRegistry
-     * @param DataManager        $dataManager
-     * @param Registry           $doctrine
-     * @param string             $dataClass
+     * @param ComputeLabelHelper  $computeLabelHelper
+     * @param FamilyRegistry      $familyRegistry
+     * @param DataManager         $dataManager
+     * @param Registry            $doctrine
+     * @param string              $dataClass
+     * @param DataLoaderInterface $dataLoader
      */
     public function __construct(
         ComputeLabelHelper $computeLabelHelper,
         FamilyRegistry $familyRegistry,
         DataManager $dataManager,
         Registry $doctrine,
-        $dataClass
+        $dataClass,
+        DataLoaderInterface $dataLoader
     ) {
         $this->computeLabelHelper = $computeLabelHelper;
         $this->familyRegistry = $familyRegistry;
         $this->dataManager = $dataManager;
         $this->repository = $doctrine->getRepository($dataClass);
+        $this->dataLoader = $dataLoader;
     }
 
     /**
@@ -190,7 +197,7 @@ class AutocompleteApiController
      */
     protected function createPager(QueryBuilder $qb, Request $request)
     {
-        $pager = new Pagerfanta(new DoctrineORMAdapter($qb));
+        $pager = new Pagerfanta(new EAVAdapter($this->dataLoader, $qb));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $pager->setMaxPerPage(10);
         try {
