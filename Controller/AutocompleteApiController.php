@@ -8,6 +8,7 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use PagerFanta\Exception\NotValidCurrentPageException;
 use Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper;
+use Sidus\EAVModelBundle\Doctrine\DataLoaderInterface;
 use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Entity\DataRepository;
 use Sidus\EAVModelBundle\Manager\DataManager;
@@ -34,24 +35,30 @@ class AutocompleteApiController
     /** @var DataRepository */
     protected $repository;
 
+    /** @var DataLoaderInterface */
+    protected $dataLoader;
+
     /**
-     * @param ComputeLabelHelper $computeLabelHelper
-     * @param FamilyRegistry     $familyRegistry
-     * @param DataManager        $dataManager
-     * @param Registry           $doctrine
-     * @param string             $dataClass
+     * @param ComputeLabelHelper  $computeLabelHelper
+     * @param FamilyRegistry      $familyRegistry
+     * @param DataManager         $dataManager
+     * @param Registry            $doctrine
+     * @param string              $dataClass
+     * @param DataLoaderInterface $dataLoader
      */
     public function __construct(
         ComputeLabelHelper $computeLabelHelper,
         FamilyRegistry $familyRegistry,
         DataManager $dataManager,
         Registry $doctrine,
-        $dataClass
+        $dataClass,
+        DataLoaderInterface $dataLoader
     ) {
         $this->computeLabelHelper = $computeLabelHelper;
         $this->familyRegistry = $familyRegistry;
         $this->dataManager = $dataManager;
         $this->repository = $doctrine->getRepository($dataClass);
+        $this->dataLoader = $dataLoader;
     }
 
     /**
@@ -98,6 +105,7 @@ class AutocompleteApiController
     protected function renderResponse(Pagerfanta $pager, AttributeInterface $attribute = null)
     {
         $results = [];
+        $this->dataLoader->load($pager, 2);
         /** @var DataInterface $data */
         foreach ($pager as $data) {
             $results[] = $this->parseResult($data, $attribute);
@@ -190,6 +198,7 @@ class AutocompleteApiController
      */
     protected function createPager(QueryBuilder $qb, Request $request)
     {
+        // Too bad we can't use the Sidus/FilterBundle DoctrineORMAdapter instead but it's not a dependency
         $pager = new Pagerfanta(new DoctrineORMAdapter($qb));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $pager->setMaxPerPage(10);

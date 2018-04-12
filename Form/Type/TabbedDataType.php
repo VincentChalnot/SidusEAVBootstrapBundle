@@ -2,13 +2,7 @@
 
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
-use Mopa\Bundle\BootstrapBundle\Form\Type\TabType;
 use Sidus\EAVModelBundle\Form\Type\DataType;
-use Sidus\EAVModelBundle\Model\AttributeInterface;
-use Sidus\EAVModelBundle\Model\FamilyInterface;
-use Sidus\EAVModelBundle\Translator\TranslatableTrait;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
