@@ -4,6 +4,7 @@ namespace Sidus\EAVBootstrapBundle\Controller;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\QueryBuilder;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use PagerFanta\Exception\NotValidCurrentPageException;
 use Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper;
@@ -13,7 +14,6 @@ use Sidus\EAVModelBundle\Entity\DataRepository;
 use Sidus\EAVModelBundle\Manager\DataManager;
 use Sidus\EAVModelBundle\Model\AttributeInterface;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
-use Sidus\EAVModelBundle\Pager\Adapter\EAVAdapter;
 use Sidus\EAVModelBundle\Registry\FamilyRegistry;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -105,6 +105,7 @@ class AutocompleteApiController
     protected function renderResponse(Pagerfanta $pager, AttributeInterface $attribute = null)
     {
         $results = [];
+        $this->dataLoader->load($pager, 2);
         /** @var DataInterface $data */
         foreach ($pager as $data) {
             $results[] = $this->parseResult($data, $attribute);
@@ -197,7 +198,8 @@ class AutocompleteApiController
      */
     protected function createPager(QueryBuilder $qb, Request $request)
     {
-        $pager = new Pagerfanta(new EAVAdapter($this->dataLoader, $qb));
+        // Too bad we can't use the Sidus/FilterBundle DoctrineORMAdapter instead but it's not a dependency
+        $pager = new Pagerfanta(new DoctrineORMAdapter($qb));
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $pager->setMaxPerPage(10);
         try {
