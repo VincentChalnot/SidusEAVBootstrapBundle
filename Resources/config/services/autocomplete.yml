@@ -1,0 +1,11 @@
+services:
+    sidus_eav_bootstrap.autocomplete.pager_generator:
+        class: Sidus\EAVBootstrapBundle\Autocomplete\PagerGenerator
+        public: false
+
+    sidus_eav_bootstrap.autocomplete.response_renderer:
+        class: Sidus\EAVBootstrapBundle\Autocomplete\ResponseRenderer
+        public: false
+        arguments:
+            - '@sidus_eav_model.entity.data_loader'
+            - '@sidus_eav_bootstrap.form.helper.compute_label'

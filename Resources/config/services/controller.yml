@@ -1,6 +1,9 @@
 services:
+    # This service is deprecated! Use the actions instead
     sidus_eav_bootstrap.controller.autocomplete:
+        abstract: true
         class: Sidus\EAVBootstrapBundle\Controller\AutocompleteApiController
+        # We keep the same list of argument than before for BC
         arguments:
             - '@sidus_eav_bootstrap.form.helper.compute_label'
             - '@sidus_eav_model.family.registry'
@@ -8,3 +11,9 @@ services:
             - '@doctrine'
             - '%sidus_eav_model.entity.data.class%'
             - '@sidus_eav_model.entity.data_loader'
+        # Injecting the new services for BC
+        calls:
+            - [setPagerGenerator, ['@sidus_eav_bootstrap.autocomplete.pager_generator']]
+            - [setResponseRenderer, ['@sidus_eav_bootstrap.autocomplete.response_renderer']]
+            - [setAttributeSearchAction, ['@sidus_eav_bootstrap.action.attribute_search']]
+            - [setFamilySearchAction, ['@sidus_eav_bootstrap.action.family_search']]

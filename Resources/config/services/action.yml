@@ -1,0 +1,19 @@
+services:
+    sidus_eav_bootstrap.action.attribute_search:
+        class: Sidus\EAVBootstrapBundle\Action\AttributeSearchAction
+        arguments:
+            - '@sidus_eav_bootstrap.autocomplete.pager_generator'
+            - '@sidus_eav_bootstrap.autocomplete.response_renderer'
+            - '@sidus_eav_model.family.registry'
+            - '@doctrine'
+            - '%sidus_eav_model.entity.data.class%'
+            - '@sidus_eav_model.manager.data'
+
+
+    sidus_eav_bootstrap.action.family_search:
+        class: Sidus\EAVBootstrapBundle\Action\FamilySearchAction
+        arguments:
+            - '@sidus_eav_bootstrap.autocomplete.pager_generator'
+            - '@sidus_eav_bootstrap.autocomplete.response_renderer'
+            - '@sidus_eav_model.manager.data'
+
