@@ -1,0 +1,31 @@
+services:
+    sidus_eav_bootstrap.form.type.tabbed_data:
+        alias: Sidus\EAVBootstrapBundle\Form\Type\TabbedDataType
+
+    sidus_eav_bootstrap.form.helper.compute_label:
+        alias: Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper
+
+    sidus_eav_bootstrap.form.attribute_builder.tabbed:
+        alias: Sidus\EAVBootstrapBundle\Form\TabbedAttributeFormBuilder
+
+    sidus_eav_model.form.attribute_builder:
+        alias: Sidus\EAVBootstrapBundle\Form\BootstrapAttributeFormBuilder
+
+    # This service is deprecated! Use the actions instead
+    sidus_eav_bootstrap.controller.autocomplete:
+        abstract: true
+        class: Sidus\EAVBootstrapBundle\Controller\AutocompleteApiController
+        # We keep the same list of argument than before for BC
+        arguments:
+            - '@Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper'
+            - '@Sidus\EAVModelBundle\Registry\FamilyRegistry'
+            - '@Sidus\EAVModelBundle\Manager\DataManager'
+            - '@Doctrine\Common\Persistence\ManagerRegistry'
+            - '%sidus_eav_model.entity.data.class%'
+            - '@Sidus\EAVModelBundle\Doctrine\DataLoaderInterface'
+        # Injecting the new services for BC
+        calls:
+            - [setPagerGenerator, ['@Sidus\EAVBootstrapBundle\Autocomplete\PagerGeneratorInterface']]
+            - [setResponseRenderer, ['@Sidus\EAVBootstrapBundle\Autocomplete\ResponseRendererInterface']]
+            - [setAttributeSearchAction, ['@Sidus\EAVBootstrapBundle\Action\AttributeSearchAction']]
+            - [setFamilySearchAction, ['@Sidus\EAVBootstrapBundle\Action\FamilySearchAction']]

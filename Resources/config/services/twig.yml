@@ -1,0 +1,8 @@
+services:
+    # Overrides default twig translation extension to inject custom translator
+    twig.extension.trans:
+        class: Symfony\Bridge\Twig\Extension\TranslationExtension
+        arguments:
+            - '@Sidus\EAVBootstrapBundle\Translation\TwigTranslator'
+        tags:
+            - { name: twig.extension }

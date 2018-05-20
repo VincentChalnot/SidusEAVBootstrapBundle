@@ -1,0 +1,5 @@
+services:
+    Sidus\EAVBootstrapBundle\Translation\TwigTranslator:
+        class: Sidus\EAVBootstrapBundle\Translation\TwigTranslator
+        arguments:
+            - '@translator'

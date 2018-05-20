@@ -2,6 +2,7 @@
 
 namespace Sidus\EAVBootstrapBundle\Action;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
 use Sidus\EAVBootstrapBundle\Autocomplete\PagerGeneratorInterface;
 use Sidus\EAVBootstrapBundle\Autocomplete\ResponseRendererInterface;
@@ -9,7 +10,6 @@ use Sidus\EAVModelBundle\Entity\DataRepository;
 use Sidus\EAVModelBundle\Manager\DataManager;
 use Sidus\EAVModelBundle\Model\AttributeInterface;
 use Sidus\EAVModelBundle\Registry\FamilyRegistry;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -37,7 +37,7 @@ class AttributeSearchAction
      * @param PagerGeneratorInterface   $pagerGenerator
      * @param ResponseRendererInterface $responseRenderer
      * @param FamilyRegistry            $familyRegistry
-     * @param RegistryInterface         $doctrine
+     * @param ManagerRegistry           $doctrine
      * @param string                    $dataClass
      * @param DataManager               $dataManager
      */
@@ -45,7 +45,7 @@ class AttributeSearchAction
         PagerGeneratorInterface $pagerGenerator,
         ResponseRendererInterface $responseRenderer,
         FamilyRegistry $familyRegistry,
-        RegistryInterface $doctrine,
+        ManagerRegistry $doctrine,
         $dataClass,
         DataManager $dataManager
     ) {

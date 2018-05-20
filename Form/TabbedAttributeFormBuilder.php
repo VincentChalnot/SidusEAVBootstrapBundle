@@ -39,6 +39,7 @@ class TabbedAttributeFormBuilder extends BootstrapAttributeFormBuilder
 
         $tabOptions = [
             'label' => $this->getGroupLabel($attribute->getFamily(), $groupPath, $level),
+            'translate_label' => false,
             'inherit_data' => true,
         ];
         $icon = $this->getGroupIcon($attribute, $groupPath, $level);
@@ -58,8 +59,9 @@ class TabbedAttributeFormBuilder extends BootstrapAttributeFormBuilder
      * @param array              $groupPath
      * @param int                $level
      *
-     * @return string
      * @throws \InvalidArgumentException
+     *
+     * @return string
      */
     protected function getGroupIcon(AttributeInterface $attribute, array $groupPath, $level)
     {

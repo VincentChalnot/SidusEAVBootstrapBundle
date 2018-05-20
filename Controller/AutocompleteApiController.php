@@ -2,7 +2,7 @@
 
 namespace Sidus\EAVBootstrapBundle\Controller;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Pagerfanta;
 use Sidus\EAVBootstrapBundle\Action\AttributeSearchAction;
@@ -61,7 +61,7 @@ class AutocompleteApiController
      * @param ComputeLabelHelper  $computeLabelHelper
      * @param FamilyRegistry      $familyRegistry
      * @param DataManager         $dataManager
-     * @param Registry            $doctrine
+     * @param ManagerRegistry     $doctrine
      * @param string              $dataClass
      * @param DataLoaderInterface $dataLoader
      */
@@ -69,7 +69,7 @@ class AutocompleteApiController
         ComputeLabelHelper $computeLabelHelper,
         FamilyRegistry $familyRegistry,
         DataManager $dataManager,
-        Registry $doctrine,
+        ManagerRegistry $doctrine,
         $dataClass,
         DataLoaderInterface $dataLoader
     ) {

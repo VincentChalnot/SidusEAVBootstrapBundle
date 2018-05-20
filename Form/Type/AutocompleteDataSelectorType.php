@@ -2,7 +2,7 @@
 
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper;
 use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Entity\DataRepository;
@@ -26,9 +26,7 @@ use UnexpectedValueException;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
- * Class AutocompleteDataSelectorType
- *
- * @package Sidus\EAVBootstrapBundle\Form\Type
+ * Add supports for Select2 autocomplete
  */
 class AutocompleteDataSelectorType extends AbstractType
 {
@@ -44,13 +42,13 @@ class AutocompleteDataSelectorType extends AbstractType
     /**
      * @param RouterInterface    $router
      * @param ComputeLabelHelper $computeLabelHelper
-     * @param Registry           $doctrine
+     * @param ManagerRegistry    $doctrine
      * @param string             $dataClass
      */
     public function __construct(
         RouterInterface $router,
         ComputeLabelHelper $computeLabelHelper,
-        Registry $doctrine,
+        ManagerRegistry $doctrine,
         $dataClass
     ) {
         $this->router = $router;
@@ -174,6 +172,7 @@ class AutocompleteDataSelectorType extends AbstractType
                         try {
                             /** @var FamilyInterface $family */
                             $family = reset($allowedFamilies);
+
                             return $this->router->generate(
                                 'sidus_autocomplete_api_family_search',
                                 [
