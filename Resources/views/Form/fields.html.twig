@@ -135,7 +135,7 @@
                 <li{% if class|trim is not empty %} class="{{ class }}"{% endif %}>
                     <a data-toggle="tab" href="#{{ tab.id }}">
                         {% if tab.icon %}{{ mopa_bootstrap_icon(tab.icon) }}{% endif %}
-                        {{ translate_label ? tab.label|trans({}, tab.translation_domain)|raw : tab.label|raw }}
+                        {{ tab.translate_label ? tab.label|trans({}, tab.translation_domain)|raw : tab.label|raw }}
                     </a>
                 </li>
             {% endfor %}
