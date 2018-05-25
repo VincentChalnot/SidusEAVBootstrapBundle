@@ -2,7 +2,7 @@
 
 namespace Sidus\EAVBootstrapBundle\Action;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Sidus\EAVBootstrapBundle\Autocomplete\PagerGeneratorInterface;
 use Sidus\EAVBootstrapBundle\Autocomplete\ResponseRendererInterface;
@@ -27,8 +27,8 @@ class AttributeSearchAction
     /** @var FamilyRegistry */
     protected $familyRegistry;
 
-    /** @var DataRepository */
-    protected $repository;
+    /** @var EntityManagerInterface */
+    protected $entityManager;
 
     /** @var DataManager */
     protected $dataManager;
@@ -37,22 +37,20 @@ class AttributeSearchAction
      * @param PagerGeneratorInterface   $pagerGenerator
      * @param ResponseRendererInterface $responseRenderer
      * @param FamilyRegistry            $familyRegistry
-     * @param ManagerRegistry           $doctrine
-     * @param string                    $dataClass
+     * @param EntityManagerInterface    $entityManager
      * @param DataManager               $dataManager
      */
     public function __construct(
         PagerGeneratorInterface $pagerGenerator,
         ResponseRendererInterface $responseRenderer,
         FamilyRegistry $familyRegistry,
-        ManagerRegistry $doctrine,
-        $dataClass,
+        EntityManagerInterface $entityManager,
         DataManager $dataManager
     ) {
         $this->pagerGenerator = $pagerGenerator;
         $this->responseRenderer = $responseRenderer;
         $this->familyRegistry = $familyRegistry;
-        $this->repository = $doctrine->getRepository($dataClass);
+        $this->entityManager = $entityManager;
         $this->dataManager = $dataManager;
     }
 
@@ -104,7 +102,14 @@ class AttributeSearchAction
         $term = '%'.trim($request->get('term'), '%').'%';
 
         if (!$attribute->getType()->isRelation() && !$attribute->getType()->isEmbedded()) {
-            $eavQb = $this->repository->createFamilyQueryBuilder($attribute->getFamily());
+            $family = $attribute->getFamily();
+            $repository = $this->entityManager->getRepository($family->getDataClass());
+            if (!$repository instanceof DataRepository) {
+                throw new \UnexpectedValueException(
+                    "Repository for class {$family->getDataClass()} must be a DataRepository"
+                );
+            }
+            $eavQb = $repository->createFamilyQueryBuilder($family);
             $attributeQb = $eavQb->attribute($attribute);
             $qb = $eavQb->apply($attributeQb->like($term));
             $qb

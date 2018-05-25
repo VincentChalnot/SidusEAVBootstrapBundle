@@ -79,7 +79,7 @@ class AutocompleteApiController
         $this->computeLabelHelper = $computeLabelHelper;
         $this->familyRegistry = $familyRegistry;
         $this->dataManager = $dataManager;
-        $this->repository = $doctrine->getRepository($dataClass);
+        $this->repository = $doctrine->getManagerForClass($dataClass)->getRepository($dataClass);
         $this->dataLoader = $dataLoader;
     }
 
