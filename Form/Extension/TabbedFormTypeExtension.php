@@ -13,6 +13,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Override MopaBootstrapBundle to add the "valid" information on form tabs line 110
  *
+ * This class would probably benefit from an entire refactoring with a much simpler system
+ *
  * Extension for Adding Tabs to Form type.
  */
 class TabbedFormTypeExtension extends AbstractTypeExtension
@@ -81,10 +83,10 @@ class TabbedFormTypeExtension extends AbstractTypeExtension
         $activeTab = null;
         $tabIndex = 0;
         $foundInvalid = false;
-        $tabs = array();
+        $tabs = [];
 
         foreach ($view->children as $child) {
-            if (in_array('tab', $child->vars['block_prefixes'], true)) {
+            if (\in_array('tab', $child->vars['block_prefixes'], true)) {
                 $child->vars['tab_index'] = $tabIndex;
                 $valid = $child->vars['valid'];
 
@@ -93,17 +95,10 @@ class TabbedFormTypeExtension extends AbstractTypeExtension
                     $foundInvalid = !$valid;
                 }
 
-                $tabs[$tabIndex] = array(
-                    'id' => $child->vars['id'],
-                    'label' => $child->vars['label'],
-                    'icon' => $child->vars['icon'],
-                    'active' => false,
-                    'valid' => $child->vars['valid'], // Sidus only override
-                    'disabled' => $child->vars['disabled'],
-                    'translation_domain' => $child->vars['translation_domain'],
-                );
+                $tabs[$tabIndex] = $child->vars; // ACTUAL OVERRIDE
+                $tabs[$tabIndex]['active'] = false;
 
-                $tabIndex++;
+                ++$tabIndex;
             }
         }
 
@@ -113,12 +108,12 @@ class TabbedFormTypeExtension extends AbstractTypeExtension
         $tabsForm = $this->formFactory->create(
             TabsType::class,
             null,
-            array(
+            [
                 'tabs' => $tabs,
-                'attr' => array(
+                'attr' => [
                     'class' => $options['tabs_class'],
-                ),
-            )
+                ],
+            ]
         );
 
         $view->vars['tabs'] = $tabs;

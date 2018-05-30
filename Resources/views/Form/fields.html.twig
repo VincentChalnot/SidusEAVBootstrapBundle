@@ -91,29 +91,6 @@
     {% endspaceless %}
 {% endblock %}
 
-{% block tabs_widget %}
-    {% spaceless %}
-        <ul class="{{ form.vars.attr.class }}">
-            {% for tab in form.vars.tabs %}
-                {% set class = (tab.active ? 'active ' : '') ~ (tab.disabled ? 'disabled' : '') %}
-                {% if not tab.valid %}
-                    {% set class = class ~ ' tab-danger' %}
-                {% endif %}
-                <li{% if class|trim is not empty %} class="{{ class }}"{% endif %}>
-                    <a data-toggle="tab" href="#{{ tab.id }}">
-                        {% if tab.icon %}{{ mopa_bootstrap_icon(tab.icon) }}{% endif %}
-                        {{ tab.translation_domain is same as(false) ? tab.label : tab.label|trans({}, tab.translation_domain) }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endspaceless %}
-{% endblock %}
-
-{% block help_label %}
-    <span class="help-block">{{ help_label|trans({}, translation_domain)|raw }}</span>
-{% endblock help_label %}
-
 {% block sidus_tabbed_data_widget %}
     {% spaceless %}
         {% if form.parent == null %}
@@ -145,3 +122,76 @@
         {% endif %}
     {% endspaceless %}
 {% endblock %}
+
+{# Mopa Bootstrap overrides #}
+{% block tabs_widget %}
+    {% spaceless %}
+        <ul class="{{ form.vars.attr.class }}">
+            {% for tab in form.vars.tabs %}
+                {% set class = (tab.active ? 'active ' : '') ~ (tab.disabled ? 'disabled' : '') %}
+                {% if not tab.valid %}
+                    {% set class = class ~ ' tab-danger' %}
+                {% endif %}
+                <li{% if class|trim is not empty %} class="{{ class }}"{% endif %}>
+                    <a data-toggle="tab" href="#{{ tab.id }}">
+                        {% if tab.icon %}{{ mopa_bootstrap_icon(tab.icon) }}{% endif %}
+                        {{ tab.translate_label ? tab.label|trans({}, tab.translation_domain)|raw : tab.label|raw }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endspaceless %}
+{% endblock %}
+
+{% block help_label %}
+    <span class="help-block">{{ help_label|trans({}, translation_domain)|raw }}</span>
+{% endblock help_label %}
+
+{% block form_label %}
+    {% if 'checkbox' not in block_prefixes or widget_checkbox_label in ['label', 'both'] %}
+        {% spaceless %}
+            {% if label is not same as(false) %}
+                {% if label is empty %}
+                    {%- if label_format is defined and label_format is not empty -%}
+                        {% set label = label_format|replace({
+                            '%name%': name,
+                            '%id%': id,
+                        }) %}
+                    {%- else -%}
+                        {% set label = name|humanize %}
+                    {%- endif -%}
+                {% endif %}
+                {% if not compound %}
+                    {% set label_attr = label_attr|merge({'for': id}) %}
+                {% endif %}
+                {% set label_attr_class = '' %}
+                {% if layout == 'horizontal' %}
+                    {% set label_attr_class = 'control-label ' ~ label_attr_class ~ horizontal_label_class %}
+                {% endif %}
+                {% if horizontal_label_div_class %}
+                    <div class="{{ horizontal_label_div_class }}">
+                {% endif %}
+                {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ " " ~ label_attr_class ~ (required ? ' required' : ' optional'))|trim }) %}
+                <label{% for attrname,attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+                {{ translate_label ? label|trans({}, translation_domain)|raw : label|raw }}
+                {{- block('label_asterisk') }}
+                {% if 'collection' in form.vars.block_prefixes and widget_add_btn|default(null) and form.vars.allow_add == true %}
+                    &nbsp;{{ block('form_widget_add_btn') }}
+                {% endif %}
+                {% if help_label %}
+                    {{ block('help_label') }}
+                {% endif %}
+                {% if help_label_tooltip.title %}
+                    {{ block('help_label_tooltip') }}
+                {% endif %}
+                {% if help_label_popover.title %}
+                    {{ block('help_label_popover') }}
+                {% endif %}
+                </label>
+                {% if horizontal_label_div_class %}
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endspaceless %}
+    {% endif %}
+{% endblock form_label %}

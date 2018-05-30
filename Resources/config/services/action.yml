@@ -1,0 +1,17 @@
+services:
+    Sidus\EAVBootstrapBundle\Action\AttributeSearchAction:
+        class: Sidus\EAVBootstrapBundle\Action\AttributeSearchAction
+        arguments:
+            - '@Sidus\EAVBootstrapBundle\Autocomplete\PagerGeneratorInterface'
+            - '@Sidus\EAVBootstrapBundle\Autocomplete\ResponseRendererInterface'
+            - '@Sidus\EAVModelBundle\Registry\FamilyRegistry'
+            - '@sidus_eav_model.entity_manager'
+            - '@Sidus\EAVModelBundle\Manager\DataManager'
+
+
+    Sidus\EAVBootstrapBundle\Action\FamilySearchAction:
+        class: Sidus\EAVBootstrapBundle\Action\FamilySearchAction
+        arguments:
+            - '@Sidus\EAVBootstrapBundle\Autocomplete\PagerGeneratorInterface'
+            - '@Sidus\EAVBootstrapBundle\Autocomplete\ResponseRendererInterface'
+            - '@Sidus\EAVModelBundle\Manager\DataManager'

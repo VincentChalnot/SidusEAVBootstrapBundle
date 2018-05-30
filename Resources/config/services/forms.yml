@@ -2,44 +2,56 @@ parameters:
     mopa_bootstrap.form.type_extension.tabbed.class: Sidus\EAVBootstrapBundle\Form\Extension\TabbedFormTypeExtension
 
 services:
-    sidus_eav_bootstrap.form.type.tabbed_data:
+    Sidus\EAVBootstrapBundle\Form\Type\TabbedDataType:
         class: Sidus\EAVBootstrapBundle\Form\Type\TabbedDataType
-        parent: sidus_eav_model.form.type.data
+        parent: Sidus\EAVModelBundle\Form\Type\DataType
+        public: false
         arguments:
-            index_0: '@sidus_eav_bootstrap.form.attribute_builder.tabbed'
+            index_0: '@Sidus\EAVBootstrapBundle\Form\TabbedAttributeFormBuilder'
         tags:
             - { name: form.type }
 
-    sidus_eav_bootstrap.form.type.autocomplete_data_selector:
+    Sidus\EAVBootstrapBundle\Form\Type\AutocompleteDataSelectorType:
         class: Sidus\EAVBootstrapBundle\Form\Type\AutocompleteDataSelectorType
+        public: false
         arguments:
-            - '@router'
-            - '@sidus_eav_bootstrap.form.helper.compute_label'
-            - '@doctrine'
+            - '@Symfony\Component\Routing\RouterInterface'
+            - '@Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper'
+            - '@sidus_eav_model.entity_manager'
             - '%sidus_eav_model.entity.data.class%'
         tags:
             - { name: form.type }
 
-    sidus_eav_bootstrap.form.type.combo_data_selector:
+    Sidus\EAVBootstrapBundle\Form\Type\ComboDataSelectorType:
         class: Sidus\EAVBootstrapBundle\Form\Type\ComboDataSelectorType
+        public: false
         arguments:
-            - '@sidus_eav_model.family.registry'
-            - '@router'
+            - '@Sidus\EAVModelBundle\Registry\FamilyRegistry'
+            - '@Symfony\Component\Routing\RouterInterface'
         tags:
             - { name: form.type }
 
-    sidus_eav_bootstrap.form.helper.compute_label:
+    Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper:
         class: Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper
+        public: false
         arguments:
-            - '@property_accessor'
+            - '@Symfony\Component\PropertyAccess\PropertyAccessorInterface'
 
-    sidus_eav_bootstrap.form.attribute_builder.tabbed:
+    Sidus\EAVBootstrapBundle\Form\TabbedAttributeFormBuilder:
         class: Sidus\EAVBootstrapBundle\Form\TabbedAttributeFormBuilder
-        parent: sidus_eav_model.form.attribute_builder
+        public: false
+        parent: Sidus\EAVModelBundle\Form\AttributeFormBuilder
 
     # Overrides base attribute builder
-    sidus_eav_model.form.attribute_builder:
+    Sidus\EAVModelBundle\Form\AttributeFormBuilder:
+        alias: Sidus\EAVBootstrapBundle\Form\BootstrapAttributeFormBuilder
+
+    Sidus\EAVModelBundle\Form\AttributeFormBuilderInterface:
+        alias: Sidus\EAVBootstrapBundle\Form\BootstrapAttributeFormBuilder
+
+    Sidus\EAVBootstrapBundle\Form\BootstrapAttributeFormBuilder:
         class: Sidus\EAVBootstrapBundle\Form\BootstrapAttributeFormBuilder
+        public: false
         arguments:
             - '%sidus_eav_model.form.collection_type%'
         calls:

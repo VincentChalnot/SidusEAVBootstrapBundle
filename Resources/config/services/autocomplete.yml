@@ -1,0 +1,17 @@
+services:
+    Sidus\EAVBootstrapBundle\Autocomplete\PagerGeneratorInterface:
+        alias: Sidus\EAVBootstrapBundle\Autocomplete\PagerGenerator
+
+    Sidus\EAVBootstrapBundle\Autocomplete\PagerGenerator:
+        class: Sidus\EAVBootstrapBundle\Autocomplete\PagerGenerator
+        public: false
+
+    Sidus\EAVBootstrapBundle\Autocomplete\ResponseRendererInterface:
+        alias: Sidus\EAVBootstrapBundle\Autocomplete\ResponseRenderer
+
+    Sidus\EAVBootstrapBundle\Autocomplete\ResponseRenderer:
+        class: Sidus\EAVBootstrapBundle\Autocomplete\ResponseRenderer
+        public: false
+        arguments:
+            - '@Sidus\EAVModelBundle\Doctrine\DataLoaderInterface'
+            - '@Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper'

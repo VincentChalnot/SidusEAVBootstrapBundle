@@ -2,7 +2,7 @@
 
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityManagerInterface;
 use Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper;
 use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Entity\DataRepository;
@@ -26,9 +26,7 @@ use UnexpectedValueException;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
- * Class AutocompleteDataSelectorType
- *
- * @package Sidus\EAVBootstrapBundle\Form\Type
+ * Add supports for Select2 autocomplete
  */
 class AutocompleteDataSelectorType extends AbstractType
 {
@@ -42,20 +40,20 @@ class AutocompleteDataSelectorType extends AbstractType
     protected $computeLabelHelper;
 
     /**
-     * @param RouterInterface    $router
-     * @param ComputeLabelHelper $computeLabelHelper
-     * @param Registry           $doctrine
-     * @param string             $dataClass
+     * @param RouterInterface        $router
+     * @param ComputeLabelHelper     $computeLabelHelper
+     * @param EntityManagerInterface $entityManager
+     * @param string                 $dataClass
      */
     public function __construct(
         RouterInterface $router,
         ComputeLabelHelper $computeLabelHelper,
-        Registry $doctrine,
+        EntityManagerInterface $entityManager,
         $dataClass
     ) {
         $this->router = $router;
         $this->computeLabelHelper = $computeLabelHelper;
-        $this->repository = $doctrine->getRepository($dataClass);
+        $this->repository = $entityManager->getRepository($dataClass);
     }
 
     /**
@@ -170,10 +168,11 @@ class AutocompleteDataSelectorType extends AbstractType
                 $attribute = $options['attribute'];
                 if (!$attribute) {
                     $allowedFamilies = $options['allowed_families'];
-                    if (1 === count($allowedFamilies)) {
+                    if (1 === \count($allowedFamilies)) {
                         try {
                             /** @var FamilyInterface $family */
                             $family = reset($allowedFamilies);
+
                             return $this->router->generate(
                                 'sidus_autocomplete_api_family_search',
                                 [

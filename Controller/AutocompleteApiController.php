@@ -2,11 +2,13 @@
 
 namespace Sidus\EAVBootstrapBundle\Controller;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
-use PagerFanta\Exception\NotValidCurrentPageException;
+use Sidus\EAVBootstrapBundle\Action\AttributeSearchAction;
+use Sidus\EAVBootstrapBundle\Action\FamilySearchAction;
+use Sidus\EAVBootstrapBundle\Autocomplete\PagerGeneratorInterface;
+use Sidus\EAVBootstrapBundle\Autocomplete\ResponseRendererInterface;
 use Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper;
 use Sidus\EAVModelBundle\Doctrine\DataLoaderInterface;
 use Sidus\EAVModelBundle\Entity\DataInterface;
@@ -19,6 +21,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * @deprecated This controller is not supported anymore, please migrate your controller to actions using the
+ * autocomplete services helpers
+ *
  * Used by autocomplete to search the EAV entities
  */
 class AutocompleteApiController
@@ -38,11 +43,25 @@ class AutocompleteApiController
     /** @var DataLoaderInterface */
     protected $dataLoader;
 
+    /** @var ResponseRendererInterface */
+    protected $responseRenderer;
+
+    /** @var PagerGeneratorInterface */
+    protected $pagerGenerator;
+
+    /** @var AttributeSearchAction */
+    protected $attributeSearchAction;
+
+    /** @var FamilySearchAction */
+    protected $familySearchAction;
+
     /**
+     * @deprecated kept for back compatibility only!
+     *
      * @param ComputeLabelHelper  $computeLabelHelper
      * @param FamilyRegistry      $familyRegistry
      * @param DataManager         $dataManager
-     * @param Registry            $doctrine
+     * @param ManagerRegistry     $doctrine
      * @param string              $dataClass
      * @param DataLoaderInterface $dataLoader
      */
@@ -50,18 +69,55 @@ class AutocompleteApiController
         ComputeLabelHelper $computeLabelHelper,
         FamilyRegistry $familyRegistry,
         DataManager $dataManager,
-        Registry $doctrine,
+        ManagerRegistry $doctrine,
         $dataClass,
         DataLoaderInterface $dataLoader
     ) {
+        $m = __CLASS__.' is deprecated, consider migrating to the AttributeSearchAction / FamilySearchAction actions';
+        @trigger_error($m, E_USER_DEPRECATED);
+
         $this->computeLabelHelper = $computeLabelHelper;
         $this->familyRegistry = $familyRegistry;
         $this->dataManager = $dataManager;
-        $this->repository = $doctrine->getRepository($dataClass);
+        $this->repository = $doctrine->getManagerForClass($dataClass)->getRepository($dataClass);
         $this->dataLoader = $dataLoader;
     }
 
     /**
+     * @param ResponseRendererInterface $responseRenderer
+     */
+    public function setResponseRenderer(ResponseRendererInterface $responseRenderer)
+    {
+        $this->responseRenderer = $responseRenderer;
+    }
+
+    /**
+     * @param PagerGeneratorInterface $pagerGenerator
+     */
+    public function setPagerGenerator(PagerGeneratorInterface $pagerGenerator)
+    {
+        $this->pagerGenerator = $pagerGenerator;
+    }
+
+    /**
+     * @param AttributeSearchAction $attributeSearchAction
+     */
+    public function setAttributeSearchAction(AttributeSearchAction $attributeSearchAction)
+    {
+        $this->attributeSearchAction = $attributeSearchAction;
+    }
+
+    /**
+     * @param FamilySearchAction $familySearchAction
+     */
+    public function setFamilySearchAction(FamilySearchAction $familySearchAction)
+    {
+        $this->familySearchAction = $familySearchAction;
+    }
+
+    /**
+     * @deprecated use the AttributeSearchAction action/service instead
+     *
      * @param Request $request
      * @param string  $attributePath Should looks like FamilyCode.attributeCode
      *
@@ -71,14 +127,15 @@ class AutocompleteApiController
      */
     public function attributeSearchAction(Request $request, $attributePath)
     {
-        $attribute = $this->getAttribute($attributePath);
-        $qb = $this->getQueryBuilderByAttribute($request, $attribute);
-        $pager = $this->createPager($qb, $request);
+        $m = __METHOD__.' is deprecated, consider using the '.AttributeSearchAction::class.' action/service instead';
+        @trigger_error($m, E_USER_DEPRECATED);
 
-        return $this->renderResponse($pager, $attribute);
+        return $this->attributeSearchAction->__invoke($request, $attributePath);
     }
 
     /**
+     * @deprecated use the FamilySearchAction action/service instead
+     *
      * @param Request         $request
      * @param FamilyInterface $family
      *
@@ -88,13 +145,15 @@ class AutocompleteApiController
      */
     public function familySearchAction(Request $request, FamilyInterface $family)
     {
-        $qb = $this->getQueryBuilderByFamily($request, $family);
-        $pager = $this->createPager($qb, $request);
+        $m = __METHOD__.' is deprecated, consider using the '.FamilySearchAction::class.' action/service instead';
+        @trigger_error($m, E_USER_DEPRECATED);
 
-        return $this->renderResponse($pager);
+        return $this->familySearchAction->__invoke($request, $family);
     }
 
     /**
+     * @deprecated Use the ResponseRenderer service instead
+     *
      * @param Pagerfanta              $pager
      * @param AttributeInterface|null $attribute
      *
@@ -104,90 +163,54 @@ class AutocompleteApiController
      */
     protected function renderResponse(Pagerfanta $pager, AttributeInterface $attribute = null)
     {
-        $results = [];
-        $this->dataLoader->load($pager, 2);
-        /** @var DataInterface $data */
-        foreach ($pager as $data) {
-            $results[] = $this->parseResult($data, $attribute);
-        }
+        $m = __METHOD__.' is deprecated, consider using the '.ResponseRendererInterface::class.' instead';
+        @trigger_error($m, E_USER_DEPRECATED);
 
-        $headers = [
-            'Cache-Control' => 'private, no-cache, no-store, must-revalidate',
-            'Pragma' => 'private',
-            'Expires' => 0,
-        ];
-
-        $response = [
-            'results' => $results,
-            'pagination' => [
-                'more' => $pager->hasNextPage(),
-            ],
-        ];
-
-        return new JsonResponse($response, 200, $headers);
+        return $this->responseRenderer->renderResponse($pager, $attribute);
     }
 
     /**
+     * @deprecated This method is now internal to the AttributeSearchAction action/service
+     *
      * @param string $attributePath
      *
-     * @throws \Sidus\EAVModelBundle\Exception\MissingFamilyException
-     * @throws \Sidus\EAVModelBundle\Exception\MissingAttributeException
-     *
-     * @return AttributeInterface
+     * @throws \BadMethodCallException
      */
     protected function getAttribute($attributePath)
     {
-        list($familyCode, $attributeCode) = explode('.', $attributePath);
-        $family = $this->familyRegistry->getFamily($familyCode);
+        $m = __METHOD__.' is deprecated and now internal to the '.AttributeSearchAction::class.' action/service';
 
-        return $family->getAttribute($attributeCode);
+        throw new \BadMethodCallException($m);
     }
 
     /**
+     * @deprecated This method is now internal to the AttributeSearchAction action/service
+     *
      * @param Request            $request
      * @param AttributeInterface $attribute
      *
-     * @throws \UnexpectedValueException
-     * @throws \LogicException
-     * @throws \Sidus\EAVModelBundle\Exception\MissingFamilyException
-     *
-     * @return QueryBuilder
+     * @throws \BadMethodCallException
      */
     protected function getQueryBuilderByAttribute(Request $request, AttributeInterface $attribute)
     {
-        $term = '%'.trim($request->get('term'), '%').'%';
+        $m = __METHOD__.' is deprecated and now internal to the '.AttributeSearchAction::class.' action/service';
 
-        if (!$attribute->getType()->isRelation() && !$attribute->getType()->isEmbedded()) {
-            $eavQb = $this->repository->createFamilyQueryBuilder($attribute->getFamily());
-
-            return $eavQb->apply($eavQb->attribute($attribute)->like($term));
-        }
-
-        /** @var array $familyCodes */
-        $familyCodes = $attribute->getOption('allowed_families', []);
-        $families = [];
-        foreach ($familyCodes as $familyCode) {
-            $families[] = $this->familyRegistry->getFamily($familyCode);
-        }
-
-        return $this->dataManager->getQbForFamiliesAndLabel($families, $term);
+        throw new \BadMethodCallException($m);
     }
 
     /**
+     * @deprecated This method is now internal to the FamilySearchAction action/service
+     *
      * @param Request         $request
      * @param FamilyInterface $family
      *
-     * @throws \UnexpectedValueException
-     * @throws \LogicException
-     * @throws \Sidus\EAVModelBundle\Exception\MissingFamilyException
-     *
-     * @return QueryBuilder
+     * @throws \BadMethodCallException
      */
     protected function getQueryBuilderByFamily(Request $request, FamilyInterface $family)
     {
-        $term = '%'.trim($request->get('term'), '%').'%';
+        $m = __METHOD__.' is deprecated and now internal to the '.FamilySearchAction::class.' action/service';
 
-        return $this->dataManager->getQbForFamiliesAndLabel([$family], $term);
+        throw new \BadMethodCallException($m);
     }
 
     /**
@@ -198,43 +221,24 @@ class AutocompleteApiController
      */
     protected function createPager(QueryBuilder $qb, Request $request)
     {
-        // Too bad we can't use the Sidus/FilterBundle DoctrineORMAdapter instead but it's not a dependency
-        $pager = new Pagerfanta(new DoctrineORMAdapter($qb));
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-        $pager->setMaxPerPage(10);
-        try {
-            $pager->setCurrentPage($request->get('page', 1));
-        } catch (NotValidCurrentPageException $e) {
-            // Silence exception, fallback to first page
-        }
+        $m = __METHOD__.' is deprecated, consider using the '.PagerGeneratorInterface::class.' instead';
+        @trigger_error($m, E_USER_DEPRECATED);
 
-        return $pager;
+        return $this->pagerGenerator->createPager($qb, $request);
     }
 
     /**
+     * @deprecated This method is now internal to the ReponseRenderer service
+     *
      * @param DataInterface      $data
      * @param AttributeInterface $attribute
      *
-     * @throws \UnexpectedValueException
-     *
-     * @return array
+     * @throws \BadMethodCallException
      */
     protected function parseResult(DataInterface $data, AttributeInterface $attribute = null)
     {
-        if ($attribute) {
-            if ($attribute->getType()->isRelation() || $attribute->getType()->isEmbedded()) {
-                // This is not perfect as it does not uses the OptionResolver of the form type to resolve the 'choice_label'
-                $label = $this->computeLabelHelper->computeLabel($data, $data->getId(), $attribute->getFormOptions());
-            } else {
-                $label = $data->get($attribute->getCode());
-            }
-        } else {
-            $label = (string) $data;
-        }
+        $m = __METHOD__.' is deprecated, use the '.ResponseRendererInterface::class.' service instead';
 
-        return [
-            'id' => $data->getId(),
-            'text' => $label,
-        ];
+        throw new \BadMethodCallException($m);
     }
 }

@@ -16,7 +16,7 @@ class BootstrapAttributeFormBuilder extends AttributeFormBuilder
      * @param FormBuilderInterface $parentBuilder
      * @param AttributeInterface   $attribute
      * @param array                $groupPath
-     * @param                      $level
+     * @param int                  $level
      *
      * @throws \Symfony\Component\Form\Exception\InvalidArgumentException
      * @throws \InvalidArgumentException
@@ -36,6 +36,7 @@ class BootstrapAttributeFormBuilder extends AttributeFormBuilder
 
         $fieldsetOptions = [
             'label' => $this->getGroupLabel($attribute->getFamily(), $groupPath, $level),
+            'translate_label' => false,
             'inherit_data' => true,
             'show_child_legend' => true,
             'horizontal_input_wrapper_class' => '',
