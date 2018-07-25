@@ -56,3 +56,11 @@ services:
             - '%sidus_eav_model.form.collection_type%'
         calls:
             - [setTranslator, ['@translator']]
+
+    Sidus\EAVBootstrapBundle\Form\Type\DateTimePickerType:
+        class: Sidus\EAVBootstrapBundle\Form\Type\DateTimePickerType
+        public: false
+        arguments:
+            - '%locale%'
+        tags:
+            - { name: form.type }

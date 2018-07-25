@@ -1,41 +1,46 @@
-!function ($) {
+/**
+ * Initialize datepickers inside a given element
+ * @param target
+ */
+function initDatePickers(target) {
+    var defaultOptions = {
+        icons: {
+            time: 'fa fa-clock-o',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-play-circle',
+            clear: 'fa fa-trash-o',
+            close: 'fa fa-remove'
+        },
+        widgetPositioning: {
+            horizontal: 'right',
+            vertical: 'bottom'
+        },
+        useCurrent: false,
+        ignoreReadonly: true,
+        showTodayButton: true,
+        showClear: true,
+        locale: 'fr'
+    };
 
-    "use strict"; // jshint ;_;
-
-    $(document).ready(function () {
-        $('[data-provider="datepicker"]').datetimepicker({
-            autoclose: true,
-            format: 'dd/mm/yyyy',
-            language: 'fr',
-            minView: 'month',
-            pickerPosition: 'bottom-left',
-            todayBtn: true,
-            startView: 'month'
+    // Datetime pickers
+    $(target).find('[data-provider="sidus-datetimepicker"]').each(function () {
+        var format = $(this).data('format');
+        // ICU to MomentJS pattern conversion
+        format = format.replace(/(d?d|y|yyyy)/g, function (m) {
+            return {
+                'd': 'D',
+                'dd': 'DD',
+                'y': 'YYYY',
+                'yyyy': 'YYYY'
+                // @todo map the other cases
+            }[m];
         });
-
-        $('[data-provider="datetimepicker"]').datetimepicker({
-            autoclose: true,
-            format: 'dd/mm/yyyy hh:ii',
-            language: 'fr',
-            pickerPosition: 'bottom-left',
-            todayBtn: true
-        });
-
-        $('[data-provider="timepicker"]').datetimepicker({
-            autoclose: true,
-            format: 'hh:ii',
-            formatViewType: 'time',
-            maxView: 'day',
-            minView: 'hour',
-            pickerPosition: 'bottom-left',
-            startView: 'day'
-        });
-
-        // Restore value from hidden input
-        $('input[type=hidden]', '.date').each(function () {
-            if ($(this).val()) {
-                $(this).parent().datetimepicker('setValue');
-            }
-        });
+        $(this).datetimepicker(
+            $.extend({format: format, locale: $(this).data('locale')}, defaultOptions)
+        );
     });
-}(window.jQuery);
+}

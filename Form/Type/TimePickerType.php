@@ -3,16 +3,16 @@
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\OptionsResolver\Exception\AccessException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Enabled a simple bootstrap datepicker on date widgets
+ * Enabled a simple bootstrap datepicker on datetime widgets
  *
  * @author Vincent Chalnot <vincent@sidus.fr>
  */
-class DatePickerType extends AbstractType
+class TimePickerType extends AbstractType
 {
     /**
      * @param OptionsResolver $resolver
@@ -23,7 +23,7 @@ class DatePickerType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'time_type' => \IntlDateFormatter::NONE,
+                'date_type' => \IntlDateFormatter::NONE,
             ]
         );
     }
