@@ -37,6 +37,7 @@ class DateTimePickerType extends AbstractType
     {
         $view->vars['locale'] = $options['locale'];
         $view->vars['format'] = $options['format'];
+        $view->vars['widget_position'] = $options['widget_position'];
     }
 
     /**
@@ -50,6 +51,7 @@ class DateTimePickerType extends AbstractType
         $resolver->setDefaults(
             [
                 'widget' => 'single_text',
+                'widget_position' => 'right',
                 'html5' => false,
                 'locale' => $this->locale,
                 'format' => null,

@@ -36,3 +36,12 @@
     border-top-left-radius: 0;
   }
 }
+
+.input-daterange {
+  display: flex;
+  > .input-group-addon {
+    flex: auto;
+    border-left: none;
+    border-right: none;
+  }
+}

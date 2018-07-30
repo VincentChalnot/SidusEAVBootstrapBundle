@@ -200,9 +200,14 @@
     {% spaceless %}
         <div data-provider="sidus-datetimepicker" class="input-group date" data-format="{{ format }}"
              data-locale="{{ locale }}">
+            {% if widget_position == 'left' %}
+                <span class="input-group-addon">{{ mopa_bootstrap_icon('calendar') }}</span>
+            {% endif %}
             {% set type = 'text' %}
             {{ block('form_widget_simple') }}
-            <span class="input-group-addon">{{ mopa_bootstrap_icon('calendar') }}</span>
+            {% if widget_position == 'right' %}
+                <span class="input-group-addon">{{ mopa_bootstrap_icon('calendar') }}</span>
+            {% endif %}
         </div>
     {% endspaceless %}
 {% endblock sidus_datetime_picker_widget %}
