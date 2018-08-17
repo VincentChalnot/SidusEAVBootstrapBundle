@@ -30,15 +30,17 @@ function initDatePickers(target) {
     $(target).find('[data-provider="sidus-datetimepicker"]').each(function () {
         var format = $(this).data('format');
         // ICU to MomentJS pattern conversion
-        format = format.replace(/(d?d|y|yyyy)/g, function (m) {
+        format = format.replace(/(d?d|y?y|yyyy)/g, function (m) {
             return {
                 'd': 'D',
                 'dd': 'DD',
                 'y': 'YYYY',
-                'yyyy': 'YYYY'
+                'yyyy': 'YYYY',
+                'yy': 'YY'
                 // @todo map the other cases
             }[m];
         });
+        console.log(format);
         $(this).datetimepicker(
             $.extend({format: format, locale: $(this).data('locale')}, defaultOptions)
         );
