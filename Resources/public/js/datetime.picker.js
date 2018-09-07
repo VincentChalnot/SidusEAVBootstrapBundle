@@ -40,7 +40,6 @@ function initDatePickers(target) {
                 // @todo map the other cases
             }[m];
         });
-        console.log(format);
         $(this).datetimepicker(
             $.extend({format: format, locale: $(this).data('locale')}, defaultOptions)
         );
