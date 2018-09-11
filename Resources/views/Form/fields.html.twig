@@ -34,20 +34,33 @@
 {% endblock %}
 
 {% block sidus_bootstrap_collection_item %}
-    {% if not form.vars.disabled and form.vars.sortable %}
-        <span class="btn btn-link position-handler">
-            <i class="fa fa-bars"></i>
-        </span>
+    {% if form.vars.sortable %}
+        {% if form.vars.disabled %}
+            <span class="btn position-handler disabled">
+                <i class="fa fa-bars text-muted"></i>
+            </span>
+        {% else %}
+            <span class="btn btn-link position-handler">
+                <i class="fa fa-bars"></i>
+            </span>
+        {% endif %}
     {% endif %}
     {{ form_widget(field) }}
     {% if prototype is defined and prototype.children|length > 1 %}
         <hr class="embed-separator"/>
     {% endif %}
-    {% if not form.vars.disabled and form.vars.allow_delete %}
-        <a href="#" class="btn btn-danger pull-right remove-action" data-removefield="collection"
-           data-field="{{ field.vars.id }}" title="{{ form.vars.delete_button_text|trans }}">
-            <i class="fa fa-trash-o"></i>
-        </a>
+    {% if form.vars.allow_delete %}
+        {% if form.vars.disabled %}
+            <a href="#" class="btn pull-right remove-action disabled"
+               title="{{ form.vars.delete_button_text|trans }}">
+                <i class="fa fa-trash-o text-muted"></i>
+            </a>
+        {% else %}
+            <a href="#" class="btn btn-danger pull-right remove-action" data-removefield="collection"
+               data-field="{{ field.vars.id }}" title="{{ form.vars.delete_button_text|trans }}">
+                <i class="fa fa-trash-o"></i>
+            </a>
+        {% endif %}
     {% endif %}
     {{ form_errors(field) }}
 {% endblock %}

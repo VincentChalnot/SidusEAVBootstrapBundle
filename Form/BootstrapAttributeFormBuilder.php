@@ -17,6 +17,7 @@ class BootstrapAttributeFormBuilder extends AttributeFormBuilder
      * @param AttributeInterface   $attribute
      * @param array                $groupPath
      * @param int                  $level
+     * @param array                $options
      *
      * @throws \Symfony\Component\Form\Exception\InvalidArgumentException
      * @throws \InvalidArgumentException
@@ -27,13 +28,9 @@ class BootstrapAttributeFormBuilder extends AttributeFormBuilder
         FormBuilderInterface $parentBuilder,
         AttributeInterface $attribute,
         array $groupPath,
-        $level
+        $level,
+        array $options = []
     ) {
-        $fieldsetCode = '__'.$groupPath[$level];
-        if ($parentBuilder->has($fieldsetCode)) {
-            return $parentBuilder->get($fieldsetCode);
-        }
-
         $fieldsetOptions = [
             'label' => $this->getGroupLabel($attribute->getFamily(), $groupPath, $level),
             'translate_label' => false,
@@ -45,8 +42,12 @@ class BootstrapAttributeFormBuilder extends AttributeFormBuilder
             ],
         ];
 
-        $parentBuilder->add($fieldsetCode, FormType::class, $fieldsetOptions);
+        $fieldsetPath = $this->getFieldsetPath($groupPath, $level);
+        if (isset($options['fieldset_options'][$fieldsetPath])) {
+            $fieldsetOptions = array_merge($fieldsetOptions, $options['fieldset_options'][$fieldsetPath]);
+        }
+        $options['fieldset_options'][$fieldsetPath] = $fieldsetOptions;
 
-        return $parentBuilder->get($fieldsetCode);
+        return parent::buildFieldset($parentBuilder, $attribute, $groupPath, $level, $options);
     }
 }

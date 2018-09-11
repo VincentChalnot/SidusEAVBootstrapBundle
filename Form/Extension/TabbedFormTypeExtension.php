@@ -30,8 +30,6 @@ class TabbedFormTypeExtension extends AbstractTypeExtension
     protected $options;
 
     /**
-     * Constructor.
-     *
      * @param FormFactoryInterface $formFactory
      * @param array                $options
      */

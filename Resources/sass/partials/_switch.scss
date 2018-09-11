@@ -8,7 +8,7 @@ $switch-on-text: 'ON' !default;
 $switch-off-text: 'OFF' !default;
 
 .sidus-switch {
-  display: inline-block;
+  display: block;
   vertical-align: middle;
   height: $switch-height;
   @include user-select(none);
@@ -45,6 +45,9 @@ $switch-off-text: 'OFF' !default;
         left: -$switch-height;
       }
     }
+  }
+  .form-horizontal .sidus-switch {
+    display: inline-block;
   }
 
   input[type=checkbox] {

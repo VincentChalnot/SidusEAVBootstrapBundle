@@ -16,6 +16,7 @@ class TabbedAttributeFormBuilder extends BootstrapAttributeFormBuilder
      * @param AttributeInterface   $attribute
      * @param array                $groupPath
      * @param                      $level
+     * @param array                $options
      *
      * @throws \Symfony\Component\Form\Exception\InvalidArgumentException
      * @throws \InvalidArgumentException
@@ -26,10 +27,11 @@ class TabbedAttributeFormBuilder extends BootstrapAttributeFormBuilder
         FormBuilderInterface $parentBuilder,
         AttributeInterface $attribute,
         array $groupPath,
-        $level
+        $level,
+        array $options = []
     ) {
         if (0 !== $level) {
-            return parent::buildFieldset($parentBuilder, $attribute, $groupPath, $level);
+            return parent::buildFieldset($parentBuilder, $attribute, $groupPath, $level, $options);
         }
 
         $fieldsetCode = '__tab_'.$groupPath[$level];
@@ -45,6 +47,11 @@ class TabbedAttributeFormBuilder extends BootstrapAttributeFormBuilder
         $icon = $this->getGroupIcon($attribute, $groupPath, $level);
         if ($icon) {
             $tabOptions['icon'] = $icon;
+        }
+
+        $fieldsetPath = $this->getFieldsetPath($groupPath, $level);
+        if (isset($options['fieldset_options'][$fieldsetPath])) {
+            $tabOptions = array_merge($tabOptions, $options['fieldset_options'][$fieldsetPath]);
         }
 
         $parentBuilder->add($fieldsetCode, TabType::class, $tabOptions);
@@ -65,7 +72,7 @@ class TabbedAttributeFormBuilder extends BootstrapAttributeFormBuilder
      */
     protected function getGroupIcon(AttributeInterface $attribute, array $groupPath, $level)
     {
-        $fieldsetPath = implode('.', array_splice($groupPath, 0, $level+1));
+        $fieldsetPath = $this->getFieldsetPath($groupPath, $level);
         $family = $attribute->getFamily();
 
         $transKeys = [

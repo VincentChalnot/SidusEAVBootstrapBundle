@@ -21,8 +21,6 @@ class ResponseRenderer implements ResponseRendererInterface
     protected $computeLabelHelper;
 
     /**
-     * ResponseRenderer constructor.
-     *
      * @param DataLoaderInterface $dataLoader
      * @param ComputeLabelHelper  $computeLabelHelper
      */
