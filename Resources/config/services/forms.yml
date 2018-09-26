@@ -26,7 +26,7 @@ services:
         class: Sidus\EAVBootstrapBundle\Form\Type\ComboDataSelectorType
         public: false
         arguments:
-            - '@Sidus\EAVModelBundle\Registry\FamilyRegistry'
+            - '@Sidus\EAVModelBundle\Form\AllowedFamiliesOptionsConfigurator'
             - '@Symfony\Component\Routing\RouterInterface'
         tags:
             - { name: form.type }

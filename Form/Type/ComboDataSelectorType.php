@@ -2,8 +2,7 @@
 
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
-use Sidus\EAVModelBundle\Model\AttributeInterface;
-use Sidus\EAVModelBundle\Registry\FamilyRegistry;
+use Sidus\EAVModelBundle\Form\AllowedFamiliesOptionsConfigurator;
 use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Form\Type\FamilySelectorType;
 use Sidus\EAVModelBundle\Model\FamilyInterface;
@@ -15,7 +14,6 @@ use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -24,19 +22,21 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class ComboDataSelectorType extends AbstractType
 {
-    /** @var FamilyRegistry */
-    protected $familyRegistry;
+    /** @var AllowedFamiliesOptionsConfigurator */
+    protected $allowedFamiliesOptionConfigurator;
 
     /** @var RouterInterface */
     protected $router;
 
     /**
-     * @param FamilyRegistry  $familyRegistry
-     * @param RouterInterface $router
+     * @param AllowedFamiliesOptionsConfigurator $allowedFamiliesOptionConfigurator
+     * @param RouterInterface                    $router
      */
-    public function __construct(FamilyRegistry $familyRegistry, RouterInterface $router)
-    {
-        $this->familyRegistry = $familyRegistry;
+    public function __construct(
+        AllowedFamiliesOptionsConfigurator $allowedFamiliesOptionConfigurator,
+        RouterInterface $router
+    ) {
+        $this->allowedFamiliesOptionConfigurator = $allowedFamiliesOptionConfigurator;
         $this->router = $router;
     }
 
@@ -122,41 +122,7 @@ class ComboDataSelectorType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(
-            [
-                'attribute' => null,
-                'allowed_families' => null,
-            ]
-        );
-        $resolver->setAllowedTypes('attribute', [AttributeInterface::class, 'NULL']);
-        $resolver->setAllowedTypes('allowed_families', ['array', 'NULL']);
-        $resolver->setNormalizer(
-            'allowed_families',
-            function (Options $options, $values) {
-                if (null === $values) {
-                    /** @var AttributeInterface $attribute */
-                    $attribute = $options['attribute'];
-                    if ($attribute) {
-                        /** @var array $values */
-                        $values = $attribute->getOption('allowed_families');
-                    }
-                    if (!$values) {
-                        $values = $this->familyRegistry->getFamilies();
-                    }
-                }
-                $families = [];
-                foreach ($values as $value) {
-                    if (!$value instanceof FamilyInterface) {
-                        $value = $this->familyRegistry->getFamily($value);
-                    }
-                    if ($value->isInstantiable()) {
-                        $families[$value->getCode()] = $value;
-                    }
-                }
-
-                return $families;
-            }
-        );
+        $this->allowedFamiliesOptionConfigurator->configureOptions($resolver);
     }
 
     /**
