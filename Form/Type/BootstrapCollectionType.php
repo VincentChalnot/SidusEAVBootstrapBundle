@@ -55,7 +55,7 @@ class BootstrapCollectionType extends AbstractType
                 'delete_button_text' => 'sidus.collection.delete',
                 'sub_widget_col' => 10,
                 'button_col' => 2,
-                'sortable' => true,
+                'sortable' => false,
                 'error_bubbling' => false,
             ]
         );
