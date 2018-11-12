@@ -16,6 +16,7 @@ class TabbedAttributeFormBuilder extends BootstrapAttributeFormBuilder
      * @param AttributeInterface   $attribute
      * @param array                $groupPath
      * @param                      $level
+     * @param array                $options
      *
      * @throws \Symfony\Component\Form\Exception\InvalidArgumentException
      * @throws \InvalidArgumentException
@@ -26,7 +27,8 @@ class TabbedAttributeFormBuilder extends BootstrapAttributeFormBuilder
         FormBuilderInterface $parentBuilder,
         AttributeInterface $attribute,
         array $groupPath,
-        $level
+        $level,
+        $options = []
     ) {
         if (0 !== $level) {
             return parent::buildFieldset($parentBuilder, $attribute, $groupPath, $level);
