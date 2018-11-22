@@ -28,7 +28,7 @@ class TabbedAttributeFormBuilder extends BootstrapAttributeFormBuilder
         AttributeInterface $attribute,
         array $groupPath,
         $level,
-        $options = []
+        array $options = []
     ) {
         if (0 !== $level) {
             return parent::buildFieldset($parentBuilder, $attribute, $groupPath, $level);
