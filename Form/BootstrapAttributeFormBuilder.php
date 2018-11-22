@@ -29,7 +29,7 @@ class BootstrapAttributeFormBuilder extends AttributeFormBuilder
         AttributeInterface $attribute,
         array $groupPath,
         $level,
-        $options = []
+        array $options = []
     ) {
         $fieldsetCode = '__'.$groupPath[$level];
         if ($parentBuilder->has($fieldsetCode)) {
