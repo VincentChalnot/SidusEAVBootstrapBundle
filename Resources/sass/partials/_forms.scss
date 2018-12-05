@@ -45,3 +45,12 @@
     border-right: none;
   }
 }
+
+.input-group-btn select {
+  border-color: $input-group-addon-border-color;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  width: 110px;
+}
