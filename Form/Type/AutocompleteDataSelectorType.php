@@ -2,7 +2,7 @@
 
 namespace Sidus\EAVBootstrapBundle\Form\Type;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Sidus\BaseBundle\Doctrine\RepositoryFinder;
 use Sidus\EAVBootstrapBundle\Form\Helper\ComputeLabelHelper;
 use Sidus\EAVModelBundle\Entity\DataInterface;
 use Sidus\EAVModelBundle\Entity\DataRepository;
@@ -40,20 +40,20 @@ class AutocompleteDataSelectorType extends AbstractType
     protected $computeLabelHelper;
 
     /**
-     * @param RouterInterface        $router
-     * @param ComputeLabelHelper     $computeLabelHelper
-     * @param EntityManagerInterface $entityManager
-     * @param string                 $dataClass
+     * @param RouterInterface    $router
+     * @param ComputeLabelHelper $computeLabelHelper
+     * @param RepositoryFinder   $repositoryFinder
+     * @param string             $dataClass
      */
     public function __construct(
         RouterInterface $router,
         ComputeLabelHelper $computeLabelHelper,
-        EntityManagerInterface $entityManager,
+        RepositoryFinder $repositoryFinder,
         $dataClass
     ) {
         $this->router = $router;
         $this->computeLabelHelper = $computeLabelHelper;
-        $this->repository = $entityManager->getRepository($dataClass);
+        $this->repository = $repositoryFinder->getRepository($dataClass);
     }
 
     /**

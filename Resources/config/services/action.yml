@@ -5,7 +5,7 @@ services:
             - '@Sidus\EAVBootstrapBundle\Autocomplete\PagerGeneratorInterface'
             - '@Sidus\EAVBootstrapBundle\Autocomplete\ResponseRendererInterface'
             - '@Sidus\EAVModelBundle\Registry\FamilyRegistry'
-            - '@sidus_eav_model.entity_manager'
+            - '@Sidus\BaseBundle\Doctrine\RepositoryFinder'
             - '@Sidus\EAVModelBundle\Manager\DataManager'
 
 

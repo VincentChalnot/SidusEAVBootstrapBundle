@@ -28,7 +28,7 @@
            data-addfield="collection" data-collection="{{ form.vars.id }}"
            {% if prototype is defined %}data-prototype-name="{{ prototype_name }}"{% endif %}
            title="{{ form.vars.add_button_text|trans }}">
-            <i class="fa fa-plus"></i>
+            {{ icon('plus') }}
         </a>
     {% endif %}
 {% endblock %}
@@ -37,11 +37,11 @@
     {% if form.vars.sortable %}
         {% if form.vars.disabled %}
             <span class="btn position-handler disabled">
-                <i class="fa fa-bars text-muted"></i>
+                {{ icon('bars text-muted') }}
             </span>
         {% else %}
             <span class="btn btn-link position-handler">
-                <i class="fa fa-bars"></i>
+                {{ icon('bars') }}
             </span>
         {% endif %}
     {% endif %}
@@ -53,12 +53,12 @@
         {% if form.vars.disabled %}
             <a href="#" class="btn pull-right remove-action disabled"
                title="{{ form.vars.delete_button_text|trans }}">
-                <i class="fa fa-trash-o text-muted"></i>
+                {{ icon('trash-o text-muted') }}
             </a>
         {% else %}
             <a href="#" class="btn btn-danger pull-right remove-action" data-removefield="collection"
                data-field="{{ field.vars.id }}" title="{{ form.vars.delete_button_text|trans }}">
-                <i class="fa fa-trash-o"></i>
+                {{ icon('trash-o') }}
             </a>
         {% endif %}
     {% endif %}

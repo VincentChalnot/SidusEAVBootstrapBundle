@@ -2,8 +2,8 @@
 
 namespace Sidus\EAVBootstrapBundle\Action;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Sidus\BaseBundle\Doctrine\RepositoryFinder;
 use Sidus\EAVBootstrapBundle\Autocomplete\PagerGeneratorInterface;
 use Sidus\EAVBootstrapBundle\Autocomplete\ResponseRendererInterface;
 use Sidus\EAVModelBundle\Entity\DataRepository;
@@ -27,8 +27,8 @@ class AttributeSearchAction
     /** @var FamilyRegistry */
     protected $familyRegistry;
 
-    /** @var EntityManagerInterface */
-    protected $entityManager;
+    /** @var RepositoryFinder */
+    protected $repositoryFinder;
 
     /** @var DataManager */
     protected $dataManager;
@@ -37,20 +37,20 @@ class AttributeSearchAction
      * @param PagerGeneratorInterface   $pagerGenerator
      * @param ResponseRendererInterface $responseRenderer
      * @param FamilyRegistry            $familyRegistry
-     * @param EntityManagerInterface    $entityManager
+     * @param RepositoryFinder          $repositoryFinder
      * @param DataManager               $dataManager
      */
     public function __construct(
         PagerGeneratorInterface $pagerGenerator,
         ResponseRendererInterface $responseRenderer,
         FamilyRegistry $familyRegistry,
-        EntityManagerInterface $entityManager,
+        RepositoryFinder $repositoryFinder,
         DataManager $dataManager
     ) {
         $this->pagerGenerator = $pagerGenerator;
         $this->responseRenderer = $responseRenderer;
         $this->familyRegistry = $familyRegistry;
-        $this->entityManager = $entityManager;
+        $this->repositoryFinder = $repositoryFinder;
         $this->dataManager = $dataManager;
     }
 
@@ -103,7 +103,7 @@ class AttributeSearchAction
 
         if (!$attribute->getType()->isRelation() && !$attribute->getType()->isEmbedded()) {
             $family = $attribute->getFamily();
-            $repository = $this->entityManager->getRepository($family->getDataClass());
+            $repository = $this->repositoryFinder->getRepository($family->getDataClass());
             if (!$repository instanceof DataRepository) {
                 throw new \UnexpectedValueException(
                     "Repository for class {$family->getDataClass()} must be a DataRepository"
