@@ -64,3 +64,9 @@ services:
             - '%locale%'
         tags:
             - { name: form.type }
+
+    Sidus\EAVBootstrapBundle\Form\Extension\TabFormTypeExtension:
+        class: Sidus\EAVBootstrapBundle\Form\Extension\TabFormTypeExtension
+        public: false
+        tags:
+            - { name: form.type_extension, extended_type: Mopa\Bundle\BootstrapBundle\Form\Type\TabType }
