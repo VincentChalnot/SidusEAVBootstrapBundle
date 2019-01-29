@@ -15,7 +15,7 @@ class TabbedAttributeFormBuilder extends BootstrapAttributeFormBuilder
      * @param FormBuilderInterface $parentBuilder
      * @param AttributeInterface   $attribute
      * @param array                $groupPath
-     * @param                      $level
+     * @param int                  $level
      * @param array                $options
      *
      * @throws \Symfony\Component\Form\Exception\InvalidArgumentException
