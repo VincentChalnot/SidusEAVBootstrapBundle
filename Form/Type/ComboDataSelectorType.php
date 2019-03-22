@@ -74,18 +74,26 @@ class ComboDataSelectorType extends AbstractType
                     if ($data instanceof DataInterface) {
                         $selected = $family->getCode() === $data->getFamilyCode();
                     }
+                    $familyOptions = [
+                        'label' => false,
+                        'allowed_families' => [$family],
+                        'auto_init' => $selected,
+                        'attr' => [
+                            'data-family' => $family->getCode(),
+                            'style' => 'display:none',
+                        ],
+                    ];
+                    if (array_key_exists($family->getCode(), $options['family_options'])) {
+                        /** @noinspection SlowArrayOperationsInLoopInspection */
+                        $familyOptions = array_merge(
+                            $familyOptions,
+                            $options['family_options'][$family->getCode()]
+                        );
+                    }
                     $form->add(
                         'data_'.$family->getCode(),
                         AutocompleteDataSelectorType::class,
-                        [
-                            'label' => false,
-                            'allowed_families' => [$family],
-                            'auto_init' => $selected,
-                            'attr' => [
-                                'data-family' => $family->getCode(),
-                                'style' => 'display:none',
-                            ],
-                        ]
+                        $familyOptions
                     );
                 }
             }
@@ -123,6 +131,11 @@ class ComboDataSelectorType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $this->allowedFamiliesOptionConfigurator->configureOptions($resolver);
+        $resolver->setDefaults(
+            [
+                'family_options' => [],
+            ]
+        );
     }
 
     /**

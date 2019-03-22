@@ -177,6 +177,7 @@ class AutocompleteDataSelectorType extends AbstractType
                                 'sidus_autocomplete_api_family_search',
                                 [
                                     'familyCode' => $family->getCode(),
+                                    'choiceLabel' => $options['choice_label'],
                                 ]
                             );
                         } catch (ExceptionInterface $e) {

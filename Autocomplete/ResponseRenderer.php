@@ -33,10 +33,11 @@ class ResponseRenderer implements ResponseRendererInterface
     /**
      * @param Pagerfanta              $pager
      * @param AttributeInterface|null $attribute
+     * @param string                  $choiceLabel
      *
      * @return JsonResponse
      */
-    public function renderResponse(Pagerfanta $pager, AttributeInterface $attribute = null)
+    public function renderResponse(Pagerfanta $pager, AttributeInterface $attribute = null, $choiceLabel = null)
     {
         $results = [];
         try {
@@ -47,7 +48,7 @@ class ResponseRenderer implements ResponseRendererInterface
         }
         foreach ($pager as $data) {
             if ($data instanceof DataInterface) {
-                $results[] = $this->parseResult($data, $attribute);
+                $results[] = $this->parseResult($data, $attribute, $choiceLabel);
             } else {
                 $results[] = $this->parseScalarResult($data);
             }
@@ -72,10 +73,11 @@ class ResponseRenderer implements ResponseRendererInterface
     /**
      * @param DataInterface      $data
      * @param AttributeInterface $attribute
+     * @param string             $choiceLabel
      *
      * @return array
      */
-    protected function parseResult(DataInterface $data, AttributeInterface $attribute = null)
+    protected function parseResult(DataInterface $data, AttributeInterface $attribute = null, $choiceLabel = null)
     {
         if ($attribute) {
             if ($attribute->getType()->isRelation() || $attribute->getType()->isEmbedded()) {
@@ -84,6 +86,8 @@ class ResponseRenderer implements ResponseRendererInterface
             } else {
                 $label = $data->get($attribute->getCode());
             }
+        } elseif ($choiceLabel) {
+            $label = $this->computeLabelHelper->computeLabel($data, $data->getId(), ['choice_label' => $choiceLabel]);
         } else {
             $label = (string) $data;
         }

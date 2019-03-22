@@ -52,7 +52,7 @@ class FamilySearchAction
         $qb = $this->getQueryBuilderByFamily($request, $family);
         $pager = $this->pagerGenerator->createPager($qb, $request);
 
-        return $this->responseRenderer->renderResponse($pager);
+        return $this->responseRenderer->renderResponse($pager, null, $request->get('choiceLabel'));
     }
 
     /**
