@@ -1,0 +1,7 @@
+sidus:
+    collection:
+        add: Ajouter
+        delete: Supprimer
+    family:
+        selector:
+            placeholder: Veuillez sélectioner une famille

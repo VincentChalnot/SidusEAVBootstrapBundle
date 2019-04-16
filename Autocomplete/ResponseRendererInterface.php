@@ -14,8 +14,9 @@ interface ResponseRendererInterface
     /**
      * @param Pagerfanta              $pager
      * @param AttributeInterface|null $attribute
+     * @param string                  $choiceLabel
      *
      * @return JsonResponse
      */
-    public function renderResponse(Pagerfanta $pager, AttributeInterface $attribute = null);
+    public function renderResponse(Pagerfanta $pager, AttributeInterface $attribute = null, $choiceLabel = null);
 }
