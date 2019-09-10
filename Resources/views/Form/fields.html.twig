@@ -62,7 +62,7 @@
             </a>
         {% endif %}
     {% endif %}
-    {{ form_errors(field) }}
+    {{ block('form_message') }}
 {% endblock %}
 
 {% block sidus_bootstrap_collection_label %}
