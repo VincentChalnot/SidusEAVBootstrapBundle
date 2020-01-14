@@ -1,0 +1,5 @@
+services:
+    Sidus\EAVBootstrapBundle\Twig\Extension\FormExtension:
+        class: Sidus\EAVBootstrapBundle\Twig\Extension\FormExtension
+        tags:
+            - { name: twig.extension }
