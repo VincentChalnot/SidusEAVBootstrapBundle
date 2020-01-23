@@ -4,6 +4,7 @@ namespace Sidus\EAVBootstrapBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Form type to allow picking of a date range
@@ -16,6 +17,21 @@ class DateRangeType extends AbstractType
 {
     public const START_NAME = 'startDate';
     public const END_NAME = 'endDate';
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(
+            [
+                'empty_data' => [
+                    self::START_NAME => null,
+                    self::END_NAME => null,
+                ],
+            ]
+        );
+    }
 
     /**
      * @param FormBuilderInterface $builder
