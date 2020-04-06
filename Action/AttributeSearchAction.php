@@ -6,6 +6,7 @@ use Doctrine\ORM\QueryBuilder;
 use Sidus\BaseBundle\Doctrine\RepositoryFinder;
 use Sidus\EAVBootstrapBundle\Autocomplete\PagerGeneratorInterface;
 use Sidus\EAVBootstrapBundle\Autocomplete\ResponseRendererInterface;
+use Sidus\EAVModelBundle\Doctrine\DQLHandler;
 use Sidus\EAVModelBundle\Entity\DataRepository;
 use Sidus\EAVModelBundle\Manager\DataManager;
 use Sidus\EAVModelBundle\Model\AttributeInterface;
@@ -99,8 +100,10 @@ class AttributeSearchAction
      */
     protected function getQueryBuilderByAttribute(Request $request, AttributeInterface $attribute)
     {
-        $term = '%'.trim($request->get('term'), '%').'%';
+        $rawTerm = trim($request->get('term'), '%');
+        $term = "%{$rawTerm}%";
 
+        // Handling simple scalar attributes
         if (!$attribute->getType()->isRelation() && !$attribute->getType()->isEmbedded()) {
             $family = $attribute->getFamily();
             $repository = $this->repositoryFinder->getRepository($family->getDataClass());
@@ -111,7 +114,13 @@ class AttributeSearchAction
             }
             $eavQb = $repository->createFamilyQueryBuilder($family);
             $attributeQb = $eavQb->attribute($attribute);
-            $qb = $eavQb->apply($attributeQb->like($term));
+            if ('' === $rawTerm) {
+                $attributeQb->applyJoin();
+                $qb = $eavQb->getQueryBuilder();
+            } else {
+                $qb = $eavQb->apply($attributeQb->like($term));
+            }
+
             $qb
                 ->select($attributeQb->getColumn())
                 ->groupBy($attributeQb->getColumn())

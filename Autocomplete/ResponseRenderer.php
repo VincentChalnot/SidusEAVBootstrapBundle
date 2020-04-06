@@ -40,14 +40,17 @@ class ResponseRenderer implements ResponseRendererInterface
     public function renderResponse(Pagerfanta $pager, AttributeInterface $attribute = null, $choiceLabel = null)
     {
         $results = [];
-        try {
-            /** @noinspection PhpParamsInspection */
-            $this->dataLoader->load($pager, 2); // Try to load results if array of EAV data
-        } catch (\InvalidArgumentException $e) {
-            // Do nothing, it just means that we have an array of scalar
-        }
+        $isDataLoaded = false;
         foreach ($pager as $data) {
             if ($data instanceof DataInterface) {
+                if (!$isDataLoaded) { // Only try to load data when a result is a DataInterface
+                    try {
+                        $this->dataLoader->load($pager, 2); // Try to load results if array of EAV data
+                    } catch (\InvalidArgumentException $e) {
+                        // Do nothing, it just means that we have an array of scalar
+                    }
+                    $isDataLoaded = true;
+                }
                 $results[] = $this->parseResult($data, $attribute, $choiceLabel);
             } else {
                 $results[] = $this->parseScalarResult($data);
