@@ -11,6 +11,10 @@
     .select2-selection__arrow {
       height: $input-height-base - $padding-base-vertical / 2;
     }
+    &.select2-selection--multiple {
+      padding-top: 2px;
+      padding-right: 0;
+    }
   }
 }
 
