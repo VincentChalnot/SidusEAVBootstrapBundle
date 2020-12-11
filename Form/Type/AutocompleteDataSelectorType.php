@@ -66,12 +66,12 @@ class AutocompleteDataSelectorType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $data = $form->getData();
-        if ($data instanceof DataInterface) { // Set the current data in the choices
-            $value = $form->getViewData();
-            $label = $this->computeLabelHelper->computeLabel($data, $value, $options);
-            $view->vars['choices'] = [
-                $value => new ChoiceView($data, $value, $label),
-            ];
+        if (\is_iterable($data)) {
+            foreach ($data as $datum) {
+                $this->appendCurrentChoice($view, $options, $datum);
+            }
+        } else {
+            $this->appendCurrentChoice($view, $options, $data);
         }
 
         if ($options['auto_init']) {
@@ -109,6 +109,9 @@ class AutocompleteDataSelectorType extends AbstractType
                         return null;
                     }
 
+                    if ($options['scalar_results']) {
+                        return $submittedData;
+                    }
                     $eavEntity = $this->repository->find($submittedData);
                     if (!$eavEntity instanceof DataInterface) {
                         throw new TransformationFailedException('Data should be a DataInterface');
@@ -155,8 +158,10 @@ class AutocompleteDataSelectorType extends AbstractType
                 'choices' => [],
                 'choice_loader' => null,
                 'query_uri' => null,
+                'scalar_results' => false,
             ]
         );
+        $resolver->setAllowedTypes('scalar_results', ['bool']);
 
         $resolver->setNormalizer(
             'query_uri',
@@ -240,5 +245,20 @@ class AutocompleteDataSelectorType extends AbstractType
         }
 
         throw new TransformationFailedException("Family {$eavEntity->getFamilyCode()} is not allowed");
+    }
+
+    /**
+     * @param FormView             $view
+     * @param array                $options
+     * @param DataInterface|scalar $data
+     */
+    protected function appendCurrentChoice(FormView $view, array $options, $data)
+    {
+        if ($data instanceof DataInterface) { // Set the current data in the choices
+            $label = $this->computeLabelHelper->computeLabel($data, $data->getId(), $options);
+            $view->vars['choices'][$data->getId()] = new ChoiceView($data, $data->getId(), $label);
+        } elseif ($options['scalar_results'] && $data) {
+            $view->vars['choices'][$data] = new ChoiceView($data, $data, $data);
+        }
     }
 }
